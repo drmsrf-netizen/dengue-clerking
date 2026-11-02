@@ -311,6 +311,23 @@ details.plain>summary{cursor:pointer;font-weight:700;padding:6px 0;color:var(--h
 .sortrow select{width:auto;min-width:0}
 .saved{font-size:12px;color:var(--ok);white-space:nowrap}
 .due-od{color:var(--crit);font-weight:700}
+
+.medchk{display:flex;flex-direction:column;gap:10px}
+.medgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.medgrid .opt{padding:10px 12px;font-size:15px;align-items:flex-start}
+.medgrid .opt input{width:18px;height:18px;margin-top:2px}
+.medrows{display:flex;flex-direction:column;gap:8px}
+.medrow{border:1px solid var(--line);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:var(--surface)}
+.medrow .mh{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.medrow .mh b{font-size:15px}
+.medrow .mg{font-size:13px;color:var(--muted)}
+.medrow .mg em{font-style:normal;font-family:var(--f-mono);font-size:11px}
+.medrow .ma{font-size:13px;border-radius:4px;padding:5px 9px;background:var(--warn-soft);color:var(--warn)}
+.medrow .ma.crit{background:var(--crit-soft);color:var(--crit)}
+.medrow .opts .opt{padding:5px 11px}
+.medrow .opts .opt:has(input[value="c"]:checked){border-color:var(--ok);background:var(--ok-soft)}
+.medrow .opts .opt:has(input[value="w"]:checked){border-color:var(--warn);background:var(--warn-soft)}
+.medrow .opts .opt:has(input[value="s"]:checked){border-color:var(--crit);background:var(--crit-soft)}
 footer{font-size:12px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 html{scroll-behavior:smooth}
@@ -568,7 +585,13 @@ html{scroll-behavior:smooth}
     <div class="line">• Urine output &lt;0.5 ml/kg/hour <span class="calc" id="uoOut" style="padding:2px 8px;min-height:0">—</span></div>
     <div class="line">• New complaint / warning signs</div>
   </div>
-  <label class="f"><span>5) Review old medication and need to continue / discontinue</span><textarea id="mx5"></textarea></label>
+  <div class="medchk">
+    <h3>5) Medicines check</h3>
+    <div class="note">CPG 9.1.2 (p31–33), Recommendation 3 (p34), sections 10.5–10.6 · tick what the patient takes, then choose continue, withhold or stop.</div>
+    <div class="medgrid" id="medGrid"></div>
+    <div class="medrows" id="medRows"></div>
+    <label class="f"><span>Other medicines / notes</span><textarea id="mx5" placeholder="e.g. levothyroxine – continue"></textarea></label>
+  </div>
   <label class="f"><span>6) Other plans incl. pass over, escalation of care</span><textarea id="mx6"></textarea></label>
   <h3>Clerking completed by</h3>
   <div class="grid wide">
@@ -1008,6 +1031,7 @@ function calc(){
   lastR=r;
   renderReviews();
   renderFluid();
+  renderMeds(r);
   renderAttn(r);
   updateTicks();
   labFlags();
@@ -1079,7 +1103,7 @@ function summary(r){
     v("mx1")&&`1) Fluid: ${v("mx1")}`,v("mx2")&&`2) Bloods: ${v("mx2")}`,v("mx3")&&`3) Next review: ${v("mx3")}`,
     mon&&`4) Monitoring: ${mon}`,
     (mon||nt.length)&&`   Notify doctor if: ${[...nt,"RR >25","PP <30","SpO2 <95%",`UO <0.5 ml/kg/hr${r.uo?` (<${fmt(r.uo)} ml/hr)`:""}`,"new complaint / warning signs"].join("; ")}`,
-    v("mx5")&&`5) Old medication: ${v("mx5")}`,v("mx6")&&`6) Other plans: ${v("mx6")}`]);
+    (medSummary()||v("mx5"))&&`5) Medicines: ${[medSummary(),v("mx5")].filter(Boolean).join("; ")}`,v("mx6")&&`6) Other plans: ${v("mx6")}`]);
   const mode=radio("sumMode")||"all";
   if(mode!=="none"&&reviews.length){const rs=sortedReviews();rs.forEach((x,k)=>x.n=k+1);const pick=mode==="latest"?rs.slice(-1):rs;
     out.push(mode==="latest"?"LATEST REVIEW":"SERIAL REVIEWS");
@@ -1298,6 +1322,36 @@ $("btnFxCopy").onclick=()=>{if(!fxCurrent){toast("Enter weight and height first"
 
 $("btnGuideOpen").onclick=()=>document.querySelectorAll("#s-guide details").forEach(d=>d.open=true);
 $("btnGuideClose").onclick=()=>document.querySelectorAll("#s-guide details").forEach(d=>d.open=false);
+/* ---------- medicines check ---------- */
+const MEDS=[
+ ["pcm","Paracetamol","Use cautiously at the lowest effective dose and shortest duration; maximum 4 g/day. Avoid or stop if liver enzymes are deranged.","9.1.2c, Rec 3"],
+ ["nsaid","NSAID (ibuprofen, diclofenac, mefenamic acid, aspirin as analgesic)","Should not be used in dengue. If taken for a chronic condition, decide case by case weighing risks and benefits.","9.1.2d, Rec 3"],
+ ["steroid","Corticosteroid","Not for treating dengue. If taken for another condition, continue or withhold after individual risk–benefit assessment.","9.1.2d, Rec 3"],
+ ["antiplt","Antiplatelet (aspirin, clopidogrel)","Continue or stop by clinical judgement. Recent stenting needs individual assessment with cardiology / neurology / vascular surgery.","9.1.2d, Rec 3"],
+ ["anticoag","Anticoagulant","Monitor closely; may need specialist review.","9.1.2d"],
+ ["statin","Statin","May be continued during acute illness if no contraindications.","9.1.2d, Rec 3"],
+ ["metformin","Metformin","May be continued if no contraindications (renal impairment, dehydration, haemodynamic instability). In hospitalised patients oral hypoglycaemics are generally stopped and insulin preferred; metformin can cause lactic acidosis.","9.1.2d, 10.5, Rec 3 & 13"],
+ ["sglt2","SGLT2 inhibitor","Withhold during acute illness, dehydration or reduced oral intake (sick day rules: risk of euglycaemic DKA). Restart in recovery phase.","9.1.2d"],
+ ["ohaother","Other oral hypoglycaemic (e.g. sulphonylurea)","In hospitalised patients, stop oral hypoglycaemics during acute illness (hypoglycaemia risk with poor intake); use insulin.","10.5, Rec 13"],
+ ["antihtn","Antihypertensive (ACEi/ARB, CCB, β-blocker, diuretic)","May be withheld in the critical phase to prevent hypotension; restart gradually in recovery when stable. β-blockers can mask tachycardia; ACEi/ARB and diuretics raise risk of AKI and hypovolaemia.","10.6, Rec 14"]];
+const DEC={c:"Continue",w:"Withhold",s:"Stop"};
+$("medGrid").innerHTML=MEDS.map(([id,l])=>`<label class="opt"><input type="checkbox" id="med_${id}"><span>${l}</span></label>`).join("");
+$("medRows").innerHTML=MEDS.map(([id,l,g,ref])=>`<div class="medrow" id="mr_${id}" hidden><div class="mh"><b>${l.split(" (")[0]}</b>
+  <div class="opts" role="radiogroup" aria-label="${l.split(" (")[0]} decision">${Object.entries(DEC).map(([k,t])=>`<label class="opt"><input type="radio" name="medd_${id}" id="medd_${id}_${k}" value="${k}"><span>${t}</span></label>`).join("")}</div></div>
+  <div class="mg">${g} <em>CPG ${ref}</em></div><div class="ma" id="ma_${id}" hidden></div></div>`).join("");
+function medAlerts(id,r){const v=x=>nz($(x).value);const sh=currentShock();const ast=v("ast"),alt=v("alt"),cr=v("creat"),la=[v("lact"),...sortedReviews().map(x=>nz(x.lact))].filter(x=>x!=null).pop(),pl=[v("aPlt"),...sortedReviews().map(x=>nz(x.plt))].filter(x=>x!=null).pop();
+  const phase=(sortedReviews().map(x=>x.phase).filter(Boolean).pop())||radio("phase");
+  if(id==="pcm"&&((ast!=null&&ast>40)||(alt!=null&&alt>40)))return["crit",`Liver enzymes deranged (AST ${ast??"–"}, ALT ${alt??"–"}): CPG advises avoiding or stopping paracetamol.`];
+  if(id==="nsaid")return["crit","CPG: NSAIDs should not be used in dengue."];
+  if(id==="metformin"){const why=[sh&&"shock",la!=null&&la>2&&`lactate ${la}`,cr!=null&&cr>(radio("gender")==="f"?80:106)&&`creatinine ${cr}`,radio("tongue")==="dry"&&"dry tongue / dehydration"].filter(Boolean);if(why.length)return["crit",`Possible contraindication present (${why.join(", ")}): consider withholding.`]}
+  if(id==="sglt2"&&phase!=="recovery")return["warn","Acute illness: CPG advises withholding until recovery phase."];
+  if(id==="antihtn"&&(phase==="critical"||sh))return["warn",`${sh?"Shock":"Critical phase"}: consider withholding to prevent hypotension.`];
+  if((id==="antiplt"||id==="anticoag")&&pl!=null&&pl<100)return["warn",`Platelets ${pl}: weigh bleeding risk (CPG 10.2 advises temporary discontinuation if PLT <100 or bleeding in heart failure patients).`];
+  if(id==="ohaother")return["warn","Hospitalised: CPG advises stopping oral hypoglycaemics and using insulin."];
+  return null}
+function renderMeds(r){MEDS.forEach(([id])=>{const on=chk("med_"+id);$("mr_"+id).hidden=!on;const a=$("ma_"+id);const al=on?medAlerts(id,r):null;a.hidden=!al;if(al){a.className="ma "+(al[0]==="crit"?"crit":"");a.textContent=al[1]}})}
+function medSummary(){const l=MEDS.filter(([id])=>chk("med_"+id)).map(([id,lab])=>{const d=radio("medd_"+id);return`${lab.split(" (")[0]}: ${d?DEC[d].toLowerCase():"decision pending"}`});return l.join("; ")}
+
 /* ---------- plausibility checks ---------- */
 const PLAUS={age:[12,110],wt:[25,250],ht:[120,220],bookWt:[25,250],sbp:[40,260],dbp:[20,160],pr:[20,250],bSbp:[60,260],bDbp:[30,160],rr:[4,70],spo2:[50,100],temp:[33,43],glu:[1,40],
   bHb:[3,25],aHb:[3,25],bWcc:[0.1,100],aWcc:[0.1,100],bHct:[10,75],aHct:[10,75],bPlt:[1,1500],aPlt:[1,1500],na:[100,180],k:[1.5,9],urea:[0.5,60],creat:[20,2000],
@@ -1329,6 +1383,8 @@ function renderAttn(r){
   if(bH&&lH!=null&&(lH-bH)/bH>=0.2)it.push(["warn",`HCT ${lH}% is ${fmt((lH-bH)/bH*100)}% above baseline (${bH}%).`,rs.length?"reviews":"clerking",rs.length?"s-rev":"s-inv"]);
   const age=nz(v("age"));if(age!=null&&age<18)it.push(["warn","Age under 18: this sheet is for adults. Use the paediatric dengue CPG.","clerking","s-pt"]);
   const bad=badFields();if(bad.length)it.push(["warn",`Check entries that look implausible: ${bad.map(id=>PLABEL[id]||id).join(", ")}.`,["rSbp","rDbp","rPr","rHct","rPlt","rTemp"].some(x=>bad.includes(x))||/^r[A-Z]/.test(bad[0])?"reviews":"clerking",/^r[A-Z]/.test(bad[0])?"revForm":(["sbp","dbp","pr","rr","spo2","temp","glu","wt","ht","bSbp","bDbp"].includes(bad[0])?"s-exam":bad[0]==="age"?"s-pt":["ioIn","ioOut"].includes(bad[0])?"s-io":bad[0]==="fxBase"?"s-fluid":"s-inv")]);
+  const pend=MEDS.filter(([id])=>chk("med_"+id)&&!radio("medd_"+id)).map(m=>m[1].split(" (")[0]);
+  if(pend.length)it.push(["info",`Decide continue / withhold / stop for: ${pend.join(", ")}.`,"clerking","s-mx"]);
   const miss=[[!v("wt"),"weight","s-exam"],[!v("ht"),"height","s-exam"],[!radio("gender"),"gender","s-pt"],[!v("feverOnset"),"date of fever onset","s-hx"]].filter(x=>x[0]);
   if(miss.length)it.push(["info",`Missing for calculations: ${miss.map(x=>x[1]).join(", ")}.`,"clerking",miss[0][2]]);
   attnState={crit:it.filter(x=>x[0]==="crit").length,warn:it.filter(x=>x[0]==="warn").length,info:it.filter(x=>x[0]==="info").length};
@@ -1434,7 +1490,7 @@ const EXAMPLE=()=>({_example:true,fxDrop:"20",clerkDT:nowLocal(),name:"Example P
   ioIn:"1800",ioOut:"650",fxStart:nowLocal(-240),fxBase:"600",notif_y:true,notifDT:nowLocal(-30),
   mx1:"Crystalloid per CPG compensated-shock regime, rate based on ADW; reassess after first bolus",mx2:"FBC/HCT 4–6-hourly, RP, LFT, VBG with lactate, GXM",mx3:"Repeat HCT and bedside review in 1 hour; revise drip after review",
   monV:"1",monU:"1",monG:"4",nSbp:"90",nDbp:"60",nHrL:"50",nHrH:"120",
-  mx5:"Withhold metformin and amlodipine while in critical phase",mx6:"Pass over to MO on call; refer medical team; ICU review if no improvement after 2nd bolus",by:"",byDT:nowLocal(),sumMode_all:true,
+  mx5:"",med_metformin:true,medd_metformin_w:true,med_antihtn:true,medd_antihtn_w:true,med_statin:false,mx6:"Pass over to MO on call; refer medical team; ICU review if no improvement after 2nd bolus",by:"",byDT:nowLocal(),sumMode_all:true,
   _reviews:[
    {dt:nowLocal(120),sbp:"108",dbp:"84",pr:"102",rr:"20",spo2:"98",temp:"37.2",dxt:"7.9",perf:{cC:"0",cR:"1",cT:"1",cV:"0",cRate:"1"},hct:"46",plt:"54",ph:"7.33",hco3:"19",be:"-5",lact:"2.6",ioIn:"2600",ioOut:"900",uoMl:"110",uoHrs:"2",notes:"Less abdominal pain, tolerating sips. Still cold peripheries.",phase:"critical",cls:"dwws",shock:"y",shockSub:"comp",plan:"Step down crystalloid rate per regime; repeat HCT in 2 h",next:nowLocal(240),by:""},
    {dt:nowLocal(300),sbp:"118",dbp:"80",pr:"92",rr:"18",spo2:"99",temp:"37.0",dxt:"6.8",ecg:"Sinus rhythm 92/min",perf:{cC:"0",cR:"0",cT:"0",cV:"0",cRate:"0"},hct:"43",plt:"49",ph:"7.38",hco3:"22",be:"-2",lact:"1.6",ioIn:"3400",ioOut:"1500",uoMl:"190",uoHrs:"3",notes:"Warm peripheries, CRT <3 s, passing urine well",phase:"critical",cls:"dwws",shock:"n",shockSub:null,plan:"Continue step-down; HCT 4-hourly; watch for fluid overload",next:nowLocal(540),by:""}]});
