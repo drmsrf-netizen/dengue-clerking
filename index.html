@@ -207,7 +207,7 @@ nav.idx button.go:hover{color:var(--ink);background:var(--surface)}
 .shell{padding-bottom:110px}
 .toast{bottom:calc(72px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:center}
 .toast button{background:none;border:1px solid currentColor;color:inherit;padding:3px 10px;font-size:13px}
-@media (max-width:520px){.actin .who,#abSave{display:none!important}.actin button{flex:1 1 0;white-space:nowrap;padding:7px 6px;font-size:13px}
+@media (max-width:520px){.actin .who,#abSave{display:none!important}.actin{gap:6px}.actin button{flex:1 1 0;white-space:nowrap;padding:7px 6px;font-size:13px}
   .top .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;width:100%}.top .chips .chip{flex:none}
   .brand b{font-size:19px}.tabs button{padding:8px 9px 9px;font-size:15px}}
 @media (pointer:coarse){.opt{padding:10px 12px;min-height:44px;align-items:center}button,.filebtn span{min-height:42px}
@@ -783,7 +783,7 @@ html{scroll-behavior:smooth}
 
 <!-- SUMMARY -->
 <section class="sh" id="s-sum" data-hue="slate" data-tab="note"><h2>Summary note</h2><div class="body">
-  <div class="row" style="align-items:center"><button type="button" class="primary" id="btnCopy">Copy note</button><div class="f"><span>Reviews in note</span><div class="opts" id="sumMode"></div></div><span class="note">Paste into the case notes or HIS. Only filled fields are included.</span></div>
+  <div class="row" style="align-items:center"><button type="button" class="primary" id="btnCopy">Copy note</button><button type="button" id="btnPdf" class="toponly" hidden>Download PDF summary</button><div class="f"><span>Reviews in note</span><div class="opts" id="sumMode"></div></div><span class="note">Paste into the case notes or HIS. Only filled fields are included.</span></div>
   <pre id="summary" tabindex="0"></pre>
 </div></section>
 
@@ -796,6 +796,7 @@ html{scroll-behavior:smooth}
   <button type="button" id="abCopy">Copy note</button>
   <button type="button" id="abSave" class="toponly" hidden>Save patient file</button>
   <button type="button" id="abPrint" class="toponly" hidden>Print</button>
+  <button type="button" id="abPdf" class="toponly" hidden>PDF</button>
 </div></div>
 <div id="printView"></div>
 <div class="toast" id="toast" hidden><span id="toastMsg"></span><button type="button" id="toastAct" hidden></button></div>
@@ -1302,7 +1303,8 @@ function labFlags(){const g=radio("gender");
     if(x>hi){el.textContent="↑ high";el.className="flag hi"}else if(x<lo){el.textContent="↓ low";el.className="flag lo"}else el.textContent=""}}
 
 /* ---------- print layout ---------- */
-function buildPrint(secs){const v=id=>$(id).value.trim();const g=radio("gender");
+let lastSecs=[];
+function buildPrint(secs){lastSecs=secs;const v=id=>$(id).value.trim();const g=radio("gender");
   const box=[["Name",v("name")],["Age / gender",[v("age")&&v("age")+" y",g&&lbl("gender",g)].filter(Boolean).join(", ")],["IC",v("ic")],["RN",v("rn")],["Bed / ward",v("bed")],["Date & time clerked",prettyDT(v("clerkDT"))]];
   const tbl=document.querySelector("#revTrend table");
   $("printView").innerHTML=`<div class="pv-h"><div><b>INPATIENT DENGUE ASSESSMENT AND CLERKING</b><span>Appendix 9 · CPG Management of Dengue in Adults (4th edition)</span></div><span>Printed ${esc(prettyDT(nowLocal()))}</span></div>
@@ -1441,6 +1443,80 @@ $("btnCopy").onclick=copyNote;$("abCopy").onclick=copyNote;
 $("abReview").onclick=()=>{goTo("reviews","revForm");setTimeout(()=>$("rSbp").focus({preventScroll:true}),120)};
 $("abPrint").onclick=()=>{calc();window.print()};
 $("abSave").onclick=()=>savePatientFile(store.current);
+/* ---------- PDF summary (built in, works offline) ---------- */
+const HW=[278, 278, 355, 556, 556, 889, 667, 191, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 278, 278, 584, 584, 584, 556, 1015, 667, 667, 722, 722, 667, 611, 778, 722, 278, 500, 667, 556, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611, 278, 278, 278, 469, 556, 333, 556, 556, 500, 556, 556, 278, 556, 556, 222, 222, 500, 222, 833, 556, 556, 556, 556, 333, 500, 278, 556, 500, 722, 500, 500, 500, 334, 260, 334, 584, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 278, 333, 556, 556, 556, 556, 260, 556, 333, 737, 370, 556, 584, 333, 737, 333, 400, 584, 333, 333, 333, 556, 537, 278, 333, 333, 365, 556, 834, 834, 834, 611, 667, 667, 667, 667, 667, 667, 1000, 722, 667, 667, 667, 667, 278, 278, 278, 278, 722, 722, 778, 778, 778, 778, 778, 584, 778, 722, 722, 722, 722, 667, 667, 611, 556, 556, 556, 556, 556, 556, 889, 500, 556, 556, 556, 556, 278, 278, 278, 278, 556, 556, 556, 556, 556, 556, 556, 584, 611, 556, 556, 556, 556, 500, 556, 500],HB=[278, 333, 474, 556, 556, 889, 722, 238, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 333, 333, 584, 584, 584, 611, 975, 722, 722, 722, 722, 667, 611, 778, 722, 278, 556, 722, 611, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611, 333, 278, 333, 584, 556, 333, 556, 611, 556, 611, 556, 333, 611, 611, 278, 278, 556, 278, 889, 611, 611, 611, 611, 389, 556, 333, 611, 556, 778, 556, 556, 500, 389, 280, 389, 584, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 278, 333, 556, 556, 556, 556, 280, 556, 333, 737, 370, 556, 584, 333, 737, 333, 400, 584, 333, 333, 333, 611, 556, 278, 333, 333, 365, 556, 834, 834, 834, 611, 722, 722, 722, 722, 722, 722, 1000, 722, 667, 667, 667, 667, 278, 278, 278, 278, 722, 722, 778, 778, 778, 778, 778, 584, 778, 722, 722, 722, 722, 667, 667, 611, 556, 556, 556, 556, 556, 556, 889, 556, 556, 556, 556, 556, 278, 278, 278, 278, 611, 611, 611, 611, 611, 611, 611, 584, 611, 611, 611, 611, 611, 556, 611, 556];
+const PDFMAP={"≥":">=","≤":"<=","→":"->","←":"<-","↑":"^","↓":"v","−":"-","₃":"3","₂":"2","⁹":"9","—":"-","–":"-","‘":"'","’":"'","“":'"',"”":'"',"…":"...","•":"-","✓":"v"};
+const pdfTxt=t=>String(t??"").replace(/[≥≤→←↑↓−₃₂⁹—–‘’“”…•✓]/g,c=>PDFMAP[c]).replace(/[\u0080-\u009f]|[^\x00-\xff]/g,"").replace(/[\r\n\t]+/g," ");
+const MM=72/25.4;
+class MiniPdf{
+  constructor(){this.W=595.28;this.H=841.89;this.pages=[];this.addPage()}
+  addPage(){this.cur=[];this.pages.push(this.cur)}
+  tw(t,size,bold){const A=bold?HB:HW;let w=0;for(const ch of t){const c=ch.charCodeAt(0);w+=(c>=32&&c<=255?A[c-32]:556)}return w*size/1000}
+  esc(t){return t.replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)")}
+  col(c){return c.map(x=>(x/255).toFixed(3)).join(" ")}
+  rect(x,y,w,h,fill,stroke,lw){const Y=this.H-(y+h)*MM;let o=`${(x*MM).toFixed(2)} ${Y.toFixed(2)} ${(w*MM).toFixed(2)} ${(h*MM).toFixed(2)} re`;
+    if(fill)this.cur.push(`${this.col(fill)} rg`);if(stroke)this.cur.push(`${this.col(stroke)} RG ${(lw||0.5).toFixed(2)} w`);
+    this.cur.push(o+" "+(fill&&stroke?"B":fill?"f":"S"))}
+  line(x1,y1,x2,y2,c,lw){this.cur.push(`${this.col(c||[0,0,0])} RG ${(lw||0.5).toFixed(2)} w ${(x1*MM).toFixed(2)} ${(this.H-y1*MM).toFixed(2)} m ${(x2*MM).toFixed(2)} ${(this.H-y2*MM).toFixed(2)} l S`)}
+  text(x,y,t,size,bold,c,align){t=pdfTxt(t);let X=x*MM;const w=this.tw(t,size,bold);if(align==="right")X-=w;else if(align==="center")X-=w/2;
+    this.cur.push(`BT ${this.col(c||[0,0,0])} rg /${bold?"F2":"F1"} ${size} Tf ${X.toFixed(2)} ${(this.H-y*MM).toFixed(2)} Td (${this.esc(t)}) Tj ET`)}
+  wrap(t,size,bold,maxMM){t=pdfTxt(t);const max=maxMM*MM;const out=[];let line="";
+    for(const word of t.split(" ")){const test=line?line+" "+word:word;if(this.tw(test,size,bold)<=max){line=test;continue}
+      if(line)out.push(line);let wd=word;while(this.tw(wd,size,bold)>max){let k=wd.length;while(k>1&&this.tw(wd.slice(0,k),size,bold)>max)k--;out.push(wd.slice(0,k));wd=wd.slice(k)}line=wd}
+    if(line||!out.length)out.push(line);return out}
+  build(){const objs=[];const add=o=>{objs.push(o);return objs.length};
+    add("<< /Type /Catalog /Pages 2 0 R >>");add("PAGES");
+    add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>");
+    add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>");
+    const kids=[];this.pages.forEach(pg=>{const st=pg.join("\n");const c=add(`<< /Length ${st.length} >>\nstream\n${st}\nendstream`);
+      kids.push(add(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${this.W} ${this.H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${c} 0 R >>`))});
+    objs[1]=`<< /Type /Pages /Kids [${kids.map(k=>k+" 0 R").join(" ")}] /Count ${kids.length} >>`;
+    let out="%PDF-1.4\n%\xE2\xE3\xCF\xD3\n";const offs=[];objs.forEach((o,i)=>{offs.push(out.length);out+=`${i+1} 0 obj\n${o}\nendobj\n`});
+    const xref=out.length;out+=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`+offs.map(o=>String(o).padStart(10,"0")+" 00000 n \n").join("");
+    out+=`trailer\n<< /Size ${objs.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+    const b=new Uint8Array(out.length);for(let i=0;i<out.length;i++)b[i]=out.charCodeAt(i)&255;return b}}
+function pdfTable(pdf,st,x,cols,head,body,o){o=o||{};const fs=o.fs||7,lh=fs*0.42,pad=1.1;
+  const hdr=()=>{const ls=head.map((h,i)=>pdf.wrap(h,fs,true,cols[i]-2*pad));const h=Math.max(...ls.map(l=>l.length))*lh+2*pad;
+    let cx=x;head.forEach((_,i)=>{pdf.rect(cx,st.y,cols[i],h,o.headFill||[230,230,230],[150,150,150],0.3);ls[i].forEach((l,k)=>pdf.text(cx+pad,st.y+pad+lh*(k+0.8),l,fs,true,o.headInk||[0,0,0]));cx+=cols[i]});st.y+=h};
+  hdr();body.forEach(row=>{const ls=row.map((c,i)=>pdf.wrap(c,fs,false,cols[i]-2*pad));const h=Math.max(...ls.map(l=>l.length))*lh+2*pad;
+    if(st.y+h>297-16){pdf.addPage();st.y=14;hdr()}
+    let cx=x;row.forEach((_,i)=>{pdf.rect(cx,st.y,cols[i],h,null,[150,150,150],0.3);ls[i].forEach((l,k)=>pdf.text(cx+pad,st.y+pad+lh*(k+0.8),l,fs,false));cx+=cols[i]});st.y+=h})}
+function downloadBlob(bytes,type,name){try{const blob=new Blob([bytes],{type});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800);toast("PDF saved to Downloads")}catch(_){toast("Saving files is not available here")}}
+function buildPdf(){
+  calc();save();const pdf=new MiniPdf();const M=14,CW=210-2*M;const st={y:M};const v=id=>$(id).value.trim();const g=radio("gender");
+  const need=h=>{if(st.y+h>297-16){pdf.addPage();st.y=M}};
+  pdf.rect(0,0,210,22,[11,79,71]);
+  pdf.text(M,10,"INPATIENT DENGUE ASSESSMENT AND CLERKING",13,true,[255,255,255]);
+  pdf.text(M,15.8,"Appendix 9 - CPG Management of Dengue in Adults (4th edition)",8.5,false,[220,240,236]);
+  pdf.text(210-M,15.8,"Generated "+prettyDT(nowLocal()),8.5,false,[220,240,236],"right");
+  st.y=27;
+  const box=[["NAME",v("name")],["AGE / GENDER",[v("age")&&v("age")+" y",g&&lbl("gender",g)].filter(Boolean).join(", ")],["IC",v("ic")],["RN",v("rn")],["BED / WARD",v("bed")],["CLERKED",prettyDT(v("clerkDT"))]];
+  const bw=[44,26,30,26,24,32];let bx=M;box.forEach(([k,val],i)=>{pdf.rect(bx,st.y,bw[i],11,[247,248,252],[120,120,120],0.4);pdf.text(bx+1.5,st.y+3.4,k,6.5,true,[38,52,143]);
+    pdf.wrap(val||"",9,false,bw[i]-3).slice(0,1).forEach(l=>pdf.text(bx+1.5,st.y+8.4,l,9,false));bx+=bw[i]});st.y+=16;
+  const bar=(t,fill,ink)=>{need(14);pdf.rect(M,st.y,CW,6,fill);pdf.text(M+2,st.y+4.2,t.toUpperCase(),9.5,true,ink||[30,40,45]);st.y+=9};
+  const para=(l,ind,bold)=>{String(l).split(/\n/).forEach(piece=>{const ls=pdf.wrap(piece,9,bold,CW-ind-2);ls.forEach(x=>{need(4.3);pdf.text(M+ind,st.y,x,9,bold);st.y+=4.2})})};
+  const alerts=[...document.querySelectorAll("#attn .ai")].map(a=>[a.querySelector(".sv").textContent,a.querySelector(".tx").textContent]);
+  if(alerts.length){bar("Alerts at time of printing",[251,227,224],[179,38,30]);alerts.forEach(([sv,tx])=>para(`${sv.toUpperCase()}: ${tx}`,2,false));st.y+=2}
+  const SECCOL={"Fluid calculation":[215,239,248],"Serial reviews":[236,230,251],"Latest review":[236,230,251],"Diagnosis":[251,225,227],"Investigations":[243,229,248],"Examination":[217,241,236],"Management":[227,234,239],"Risk factors":[251,239,210],"History of presenting illness":[253,230,218],"Illness severity":[226,241,220],"Cumulative I/O":[221,233,250]};
+  lastSecs.slice(1).forEach(([t,lines])=>{bar(t,SECCOL[t]||[227,234,239]);lines.forEach(l=>para(l.trim(),/^\s+/.test(l)?6:2,/^Review \d+ /.test(l)));st.y+=2.5});
+  const tbl=document.querySelector("#revTrend table");
+  if(tbl&&reviews.length){bar("Review trend",[236,230,251]);
+    const head=[...tbl.querySelectorAll("thead th")].map(th=>th.textContent.trim()||" ");
+    const body=[...tbl.querySelectorAll("tbody tr")].map(tr=>[...tr.children].map(td=>td.textContent.replace(/\s+/g," ").trim()));
+    const nat=head.map((h,i)=>Math.max(pdf.tw(pdfTxt(h),6.5,true),...body.map(r=>pdf.tw(pdfTxt(r[i]),7,false)))/MM+2.6);
+    const tot=nat.reduce((a,b)=>a+b,0);const cols=nat.map(w=>w*CW/tot);
+    pdfTable(pdf,st,M,cols,head,body,{fs:7,headFill:[113,72,214],headInk:[255,255,255]});st.y+=4}
+  need(20);st.y+=8;pdf.text(M,st.y,"Clerked by: "+(v("by")||""),9.5,false);pdf.line(M+21,st.y+1,M+85,st.y+1,[0,0,0],0.5);
+  pdf.text(105+5,st.y,"Signature / stamp:",9.5,false);pdf.line(105+36,st.y+1,210-M,st.y+1,[0,0,0],0.5);
+  const n=pdf.pages.length;pdf.pages.forEach((pg,i)=>{pdf.cur=pg;
+    pdf.text(M,297-8,`${v("name")||"Patient"}${v("rn")?" - RN "+v("rn"):""}`,7.5,false,[110,110,110]);
+    pdf.text(105,297-8,"Suggestions are aids; the clinician confirms every classification.",7.5,false,[110,110,110],"center");
+    pdf.text(210-M,297-8,`Page ${i+1} of ${n}`,7.5,false,[110,110,110],"right")});
+  return pdf.build()}
+function makePdf(){const bytes=buildPdf();const v=id=>$(id).value.trim();
+  downloadBlob(bytes,"application/pdf",`dengue_summary_${(v("rn")||v("name")||"patient").replace(/[^\w-]+/g,"_")}_${stamp()}.pdf`)}
+$("abPdf").onclick=makePdf;$("btnPdf").onclick=makePdf;
+
 </script>
 
 </body>
