@@ -233,6 +233,63 @@ nav.idx button.go:hover{color:var(--ink);background:var(--surface)}
   .pv-sign{display:flex;justify-content:space-between;gap:20px;margin-top:18px;font-size:10pt}
   .pv-f{margin-top:10px;font-size:8pt;color:#333;border-top:1px solid #999;padding-top:4px}
 }
+
+/* ---------- colour layer: one hue per section / tab ---------- */
+:root{--c-indigo:#3f51c5;--s-indigo:#e6e9fa;--i-indigo:#26348f;--b-indigo:#8c9cff;--c-amber:#b97800;--s-amber:#fbefd2;--i-amber:#6e4700;--b-amber:#f2b54a;--c-purple:#9c3fb8;--s-purple:#f3e5f8;--i-purple:#66217d;--b-purple:#d58cf0;--c-orange:#d4571f;--s-orange:#fde6da;--i-orange:#8a3510;--b-orange:#ff9a66;--c-green:#3b8a2c;--s-green:#e2f1dc;--i-green:#275b1c;--b-green:#8fd67e;--c-teal:#0e8a7a;--s-teal:#d9f1ec;--i-teal:#0a5a50;--b-teal:#5fd0bd;--c-crimson:#c8323f;--s-crimson:#fbe1e3;--i-crimson:#861d27;--b-crimson:#ff8a92;--c-blue:#1f6fd1;--s-blue:#dde9fa;--i-blue:#134a8c;--b-blue:#7fb2ff;--c-slate:#4a6476;--s-slate:#e3eaef;--i-slate:#2e4351;--b-slate:#9fb6c6;--c-sky:#0b8bbd;--s-sky:#d7eff8;--i-sky:#075b7c;--b-sky:#5cc6ee;--c-violet:#7148d6;--s-violet:#ece6fb;--i-violet:#4a2a9e;--b-violet:#b39bff;--band:#0b4f47;--band-2:#0f6457}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c-indigo:#8c9cff;--s-indigo:#1f2547;--i-indigo:#c3cbff;--c-amber:#f2b54a;--s-amber:#3a2c0e;--i-amber:#f6d08c;--c-purple:#d58cf0;--s-purple:#36203f;--i-purple:#ebc5f7;--c-orange:#ff9a66;--s-orange:#3f2418;--i-orange:#ffc9ad;--c-green:#8fd67e;--s-green:#1f3420;--i-green:#c3ebb9;--c-teal:#5fd0bd;--s-teal:#143631;--i-teal:#a9e9de;--c-crimson:#ff8a92;--s-crimson:#421c20;--i-crimson:#ffc2c6;--c-blue:#7fb2ff;--s-blue:#17294a;--i-blue:#bcd6ff;--c-slate:#9fb6c6;--s-slate:#1f2a31;--i-slate:#cfdde7;--c-sky:#5cc6ee;--s-sky:#123342;--i-sky:#a9e2f7;--c-violet:#b39bff;--s-violet:#2a2247;--i-violet:#d8ccff;--band:#0b211e;--band-2:#123631}}
+:root[data-theme="dark"]{--c-indigo:#8c9cff;--s-indigo:#1f2547;--i-indigo:#c3cbff;--c-amber:#f2b54a;--s-amber:#3a2c0e;--i-amber:#f6d08c;--c-purple:#d58cf0;--s-purple:#36203f;--i-purple:#ebc5f7;--c-orange:#ff9a66;--s-orange:#3f2418;--i-orange:#ffc9ad;--c-green:#8fd67e;--s-green:#1f3420;--i-green:#c3ebb9;--c-teal:#5fd0bd;--s-teal:#143631;--i-teal:#a9e9de;--c-crimson:#ff8a92;--s-crimson:#421c20;--i-crimson:#ffc2c6;--c-blue:#7fb2ff;--s-blue:#17294a;--i-blue:#bcd6ff;--c-slate:#9fb6c6;--s-slate:#1f2a31;--i-slate:#cfdde7;--c-sky:#5cc6ee;--s-sky:#123342;--i-sky:#a9e2f7;--c-violet:#b39bff;--s-violet:#2a2247;--i-violet:#d8ccff;--band:#0b211e;--band-2:#123631}
+[data-hue="indigo"]{--h:var(--c-indigo);--hs:var(--s-indigo);--hi:var(--i-indigo);--hb:var(--b-indigo)}
+[data-hue="amber"]{--h:var(--c-amber);--hs:var(--s-amber);--hi:var(--i-amber);--hb:var(--b-amber)}
+[data-hue="purple"]{--h:var(--c-purple);--hs:var(--s-purple);--hi:var(--i-purple);--hb:var(--b-purple)}
+[data-hue="orange"]{--h:var(--c-orange);--hs:var(--s-orange);--hi:var(--i-orange);--hb:var(--b-orange)}
+[data-hue="green"]{--h:var(--c-green);--hs:var(--s-green);--hi:var(--i-green);--hb:var(--b-green)}
+[data-hue="teal"]{--h:var(--c-teal);--hs:var(--s-teal);--hi:var(--i-teal);--hb:var(--b-teal)}
+[data-hue="crimson"]{--h:var(--c-crimson);--hs:var(--s-crimson);--hi:var(--i-crimson);--hb:var(--b-crimson)}
+[data-hue="blue"]{--h:var(--c-blue);--hs:var(--s-blue);--hi:var(--i-blue);--hb:var(--b-blue)}
+[data-hue="slate"]{--h:var(--c-slate);--hs:var(--s-slate);--hi:var(--i-slate);--hb:var(--b-slate)}
+[data-hue="sky"]{--h:var(--c-sky);--hs:var(--s-sky);--hi:var(--i-sky);--hb:var(--b-sky)}
+[data-hue="violet"]{--h:var(--c-violet);--hs:var(--s-violet);--hi:var(--i-violet);--hb:var(--b-violet)}
+.top{background:linear-gradient(100deg,var(--band),var(--band-2));border-bottom:0;color:#fff}
+body::before{background:var(--band)}
+.top .brand small{color:rgba(255,255,255,.72)}
+.top .brand b{color:#fff}
+.tabs{margin-bottom:-10px;gap:4px;padding-top:2px}
+.tabs button{color:rgba(255,255,255,.8);border:0;border-radius:7px 7px 0 0;padding:9px 14px 10px;display:inline-flex;align-items:center;gap:7px}
+.tabs button::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--hb);flex:none}
+.tabs button:hover{color:#fff;background:rgba(255,255,255,.08)}
+.tabs button[aria-current="page"]{background:var(--bg);color:var(--hi);border-bottom:0}
+.tabs button[aria-current="page"]::before{background:var(--h)}
+.tabs .cnt{background:rgba(255,255,255,.16);border-color:transparent;color:#fff;margin-left:0}
+.tabs button[aria-current="page"] .cnt{background:var(--hs);color:var(--hi)}
+section.sh{border-top:4px solid var(--h,var(--line))}
+section.sh>h2{background:var(--hs,var(--bar));color:var(--hi,var(--ink));border-bottom-color:transparent}
+section.sh h3{color:var(--h,var(--muted))}
+section.sh .calc{background:var(--hs,var(--accent-soft));color:var(--hi,var(--accent))}
+section.sh .opt input{accent-color:var(--h,var(--accent))}
+section.sh .opt:has(input:checked){border-color:var(--h,var(--accent));background:var(--hs,var(--accent-soft))}
+section.sh .opts.warnset .opt:has(input:checked){border-color:var(--warn);background:var(--warn-soft)}
+section.sh .opts.critset .opt:has(input:checked){border-color:var(--crit);background:var(--crit-soft)}
+section.sh input:focus-visible,section.sh select:focus-visible,section.sh textarea:focus-visible{outline-color:var(--h,var(--accent))}
+section.sh table.trend th,section.sh table.gt thead th{background:var(--hs,var(--bar));color:var(--hi,var(--ink))}
+section.sh .ccvtr b{color:var(--hi,var(--accent))}
+section.sh button.primary{background:var(--h,var(--accent));border-color:var(--h,var(--accent))}
+.revform{border-color:var(--h,var(--accent))}
+.gd>summary{color:var(--hi,var(--ink))}
+.gd>summary::before{border-color:var(--h,var(--accent))}
+.gd[open]>summary{background:var(--hs)}
+nav.idx .idxh{color:var(--c-teal)}
+nav.idx button.go{border-left:3px solid var(--h,var(--line));border-radius:0 4px 4px 0}
+nav.idx button.go:hover{background:var(--hs);color:var(--hi)}
+.attn.has-crit{border-color:var(--crit)}.attn.has-crit h3{background:var(--crit-soft);color:var(--crit)}
+.attn.has-warn{border-color:var(--warn)}.attn.has-warn h3{background:var(--warn-soft);color:var(--warn)}
+.attn.has-info h3{background:var(--s-sky);color:var(--i-sky)}
+.ai.crit{background:color-mix(in srgb,var(--crit-soft) 55%,var(--surface))}
+.ai.warn{background:color-mix(in srgb,var(--warn-soft) 55%,var(--surface))}
+.pt.cur{border-color:var(--c-indigo);background:var(--s-indigo)}
+.ptbed{color:var(--i-indigo)}
+#abReview{background:var(--c-violet);border-color:var(--c-violet);color:#fff}
+#abCopy{border-color:var(--c-slate);color:var(--i-slate)}
+.actbar{border-top:3px solid var(--band-2)}
 footer{font-size:12px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 html{scroll-behavior:smooth}
@@ -245,27 +302,27 @@ html{scroll-behavior:smooth}
   <div class="brand"><small>Inpatient Dengue Assessment · Appendix 9</small><b id="hdrName">New patient</b></div>
   <div class="chips" id="chips"></div>
   <nav class="tabs" id="tabs" aria-label="Views">
-    <button type="button" data-tab="patients">Patients<span class="cnt" id="ptCount"></span></button>
-    <button type="button" data-tab="clerking">Clerking</button>
-    <button type="button" data-tab="reviews">Reviews<span class="cnt" id="revCount"></span></button>
-    <button type="button" data-tab="fluids">Fluids</button>
-    <button type="button" data-tab="guide">CPG guide</button>
-    <button type="button" data-tab="note">Note</button>
+    <button type="button" data-tab="patients" data-hue="indigo">Patients<span class="cnt" id="ptCount"></span></button>
+    <button type="button" data-tab="clerking" data-hue="teal">Clerking</button>
+    <button type="button" data-tab="reviews" data-hue="violet">Reviews<span class="cnt" id="revCount"></span></button>
+    <button type="button" data-tab="fluids" data-hue="sky">Fluids</button>
+    <button type="button" data-tab="guide" data-hue="amber">CPG guide</button>
+    <button type="button" data-tab="note" data-hue="slate">Note</button>
   </nav>
 </div></header>
 
 <div class="wrap"><div class="shell">
 <nav class="idx" id="idx" aria-label="Clerking sections">
   <div class="idxh">Clerking sections</div>
-  <button type="button" class="go" data-go="s-pt"><i class="tk" id="tk-s-pt"></i>Patient</button>
-  <button type="button" class="go" data-go="s-risk"><i class="tk" id="tk-s-risk"></i>Risk factors</button>
-  <button type="button" class="go" data-go="s-inv"><i class="tk" id="tk-s-inv"></i>Investigations</button>
-  <button type="button" class="go" data-go="s-hx"><i class="tk" id="tk-s-hx"></i>History &amp; warning signs</button>
-  <button type="button" class="go" data-go="s-sev"><i class="tk" id="tk-s-sev"></i>Illness severity</button>
-  <button type="button" class="go" data-go="s-exam"><i class="tk" id="tk-s-exam"></i>Examination</button>
-  <button type="button" class="go" data-go="s-dx"><i class="tk" id="tk-s-dx"></i>Diagnosis</button>
-  <button type="button" class="go" data-go="s-io"><i class="tk" id="tk-s-io"></i>Fluid balance</button>
-  <button type="button" class="go" data-go="s-mx"><i class="tk" id="tk-s-mx"></i>Management</button>
+  <button type="button" class="go" data-go="s-pt" data-hue="indigo"><i class="tk" id="tk-s-pt"></i>Patient</button>
+  <button type="button" class="go" data-go="s-risk" data-hue="amber"><i class="tk" id="tk-s-risk"></i>Risk factors</button>
+  <button type="button" class="go" data-go="s-inv" data-hue="purple"><i class="tk" id="tk-s-inv"></i>Investigations</button>
+  <button type="button" class="go" data-go="s-hx" data-hue="orange"><i class="tk" id="tk-s-hx"></i>History &amp; warning signs</button>
+  <button type="button" class="go" data-go="s-sev" data-hue="green"><i class="tk" id="tk-s-sev"></i>Illness severity</button>
+  <button type="button" class="go" data-go="s-exam" data-hue="teal"><i class="tk" id="tk-s-exam"></i>Examination</button>
+  <button type="button" class="go" data-go="s-dx" data-hue="crimson"><i class="tk" id="tk-s-dx"></i>Diagnosis</button>
+  <button type="button" class="go" data-go="s-io" data-hue="blue"><i class="tk" id="tk-s-io"></i>Fluid balance</button>
+  <button type="button" class="go" data-go="s-mx" data-hue="slate"><i class="tk" id="tk-s-mx"></i>Management</button>
   <div class="idxp" id="idxProg"></div>
 </nav>
 
@@ -274,7 +331,7 @@ html{scroll-behavior:smooth}
 <div class="attn" id="attn" aria-live="polite"></div>
 
 <!-- PATIENTS -->
-<section class="sh" id="s-patients" data-tab="patients" data-nosave><h2>Patients on this PC</h2><div class="body">
+<section class="sh" id="s-patients" data-hue="indigo" data-tab="patients" data-nosave><h2>Patients on this PC</h2><div class="body">
   <div class="row" style="align-items:center;gap:8px">
     <button type="button" class="primary" id="btnNewPt">New patient</button>
     <button type="button" id="btnExample">Add example patient</button>
@@ -286,7 +343,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- PATIENT -->
-<section class="sh" id="s-pt" data-tab="clerking"><h2>Patient demographic data</h2><div class="body">
+<section class="sh" id="s-pt" data-hue="indigo" data-tab="clerking"><h2>Patient demographic data</h2><div class="body">
   <div class="grid wide">
     <label class="f"><span>Date &amp; time of clerking</span><input type="datetime-local" id="clerkDT"></label>
     <label class="f"><span>Name</span><input type="text" id="name" autocomplete="off"></label>
@@ -311,13 +368,13 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- RISK -->
-<section class="sh" id="s-risk" data-tab="clerking"><h2>Risk factors / special populations</h2><div class="body">
+<section class="sh" id="s-risk" data-hue="amber" data-tab="clerking"><h2>Risk factors / special populations</h2><div class="body">
   <div class="opts warnset" id="risk"></div>
   <label class="f"><span>Others</span><input type="text" id="riskOther"></label>
 </div></section>
 
 <!-- INVESTIGATIONS -->
-<section class="sh" id="s-inv" data-tab="clerking"><h2>Investigations</h2><div class="body">
+<section class="sh" id="s-inv" data-hue="purple" data-tab="clerking"><h2>Investigations</h2><div class="body">
   <h3>Dengue diagnostic test</h3>
   <div class="grid">
     <label class="f"><span>NS1</span><select id="ns1"><option value="">—</option><option>Positive</option><option>Negative</option><option>Not done</option></select></label>
@@ -338,7 +395,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- HISTORY -->
-<section class="sh" id="s-hx" data-tab="clerking"><h2>History of presenting illness</h2><div class="body">
+<section class="sh" id="s-hx" data-hue="orange" data-tab="clerking"><h2>History of presenting illness</h2><div class="body">
   <div class="grid wide">
     <label class="f"><span>Date of fever onset <em>(day 1)</em></span><input type="date" id="feverOnset"></label>
     <div class="f"><span>Current day of illness</span><div class="calc" id="dayOut">—</div></div>
@@ -350,7 +407,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- SEVERITY -->
-<section class="sh" id="s-sev" data-tab="clerking"><h2>Illness severity assessment</h2><div class="body">
+<section class="sh" id="s-sev" data-hue="green" data-tab="clerking"><h2>Illness severity assessment</h2><div class="body">
   <div class="f"><span>a) Level of daily activities during illness</span><div class="opts col" id="sevA"></div></div>
   <div class="f"><span>b) Fluid intake (past 24–48 hours)</span><div class="opts" id="sevB"></div></div>
   <div class="f"><span>c) Frequency of urination (past 24 hours)</span><div class="opts" id="sevC"></div></div>
@@ -359,7 +416,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- EXAM -->
-<section class="sh" id="s-exam" data-tab="clerking"><h2>Clinical examination</h2><div class="body">
+<section class="sh" id="s-exam" data-hue="teal" data-tab="clerking"><h2>Clinical examination</h2><div class="body">
   <div class="grid">
     <label class="f"><span>Weight <em>kg</em></span><input type="number" id="wt" step="0.1"></label>
     <label class="f"><span>Height <em>cm</em></span><input type="number" id="ht" step="0.5"></label>
@@ -406,7 +463,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- DIAGNOSIS -->
-<section class="sh" id="s-dx" data-tab="clerking"><h2>Diagnosis</h2><div class="body">
+<section class="sh" id="s-dx" data-hue="crimson" data-tab="clerking"><h2>Diagnosis</h2><div class="body">
   <div class="hint" id="dxHint"></div>
   <div class="row">
     <div class="f"><span>Days of illness</span><div class="calc" id="dayOut2">—</div></div>
@@ -422,7 +479,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- I/O -->
-<section class="sh" id="s-io" data-tab="clerking"><h2>Cumulative I/O since presentation to healthcare</h2><div class="body">
+<section class="sh" id="s-io" data-hue="blue" data-tab="clerking"><h2>Cumulative I/O since presentation to healthcare</h2><div class="body">
   <div class="grid wide">
     <label class="f"><span>Total intake <em>oral + IV fluid / blood products, ml</em></span><input type="number" id="ioIn"></label>
     <label class="f"><span>Total output <em>urine + GI losses, ml</em></span><input type="number" id="ioOut"></label>
@@ -435,7 +492,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- FLUID CALCULATOR -->
-<section class="sh" id="s-fluid" data-tab="fluids"><h2>Fluid calculator · CPG 4th edition</h2><div class="body">
+<section class="sh" id="s-fluid" data-hue="sky" data-tab="fluids"><h2>Fluid calculator · CPG 4th edition</h2><div class="body">
   <div class="grid">
     <div class="f"><span>Fluid weight</span><div class="calc" id="fxW">—</div></div>
     <div class="f"><span>Weight for maintenance &amp; quota <em>cap 70 kg</em></span><div class="calc" id="fxCap">—</div></div>
@@ -464,7 +521,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- MANAGEMENT -->
-<section class="sh" id="s-mx" data-tab="clerking"><h2>Management</h2><div class="body">
+<section class="sh" id="s-mx" data-hue="slate" data-tab="clerking"><h2>Management</h2><div class="body">
   <label class="f"><span>1) Fluid management (type, rate, amount)</span><textarea id="mx1"></textarea></label>
   <label class="f"><span>2) Blood investigations</span><textarea id="mx2"></textarea></label>
   <label class="f"><span>3) Time for next blood taking, bedside review and revision of drip regime</span><textarea id="mx3"></textarea></label>
@@ -494,7 +551,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- CPG FLUID GUIDE -->
-<section class="sh" id="s-guide" data-tab="guide"><h2>Dengue fluid management · CPG summary</h2><div class="body">
+<section class="sh" id="s-guide" data-hue="amber" data-tab="guide"><h2>Dengue fluid management · CPG summary</h2><div class="body">
   <div class="note">Summary of fluid management from the CPG Management of Dengue in Adults (4th edition). Tap a heading to expand it. Use the Fluid calculator above for this patient's rates.</div>
   <div class="guide-actions"><button type="button" id="btnGuideOpen">Expand all</button><button type="button" id="btnGuideClose">Collapse all</button></div>
 
@@ -660,7 +717,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- REVIEWS -->
-<section class="sh" id="s-rev" data-tab="reviews"><h2>Serial reviews</h2><div class="body">
+<section class="sh" id="s-rev" data-hue="violet" data-tab="reviews"><h2>Serial reviews</h2><div class="body">
   <div id="revTrend"></div>
   <div id="revList" class="revlist"></div>
 
@@ -725,7 +782,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- SUMMARY -->
-<section class="sh" id="s-sum" data-tab="note"><h2>Summary note</h2><div class="body">
+<section class="sh" id="s-sum" data-hue="slate" data-tab="note"><h2>Summary note</h2><div class="body">
   <div class="row" style="align-items:center"><button type="button" class="primary" id="btnCopy">Copy note</button><div class="f"><span>Reviews in note</span><div class="opts" id="sumMode"></div></div><span class="note">Paste into the case notes or HIS. Only filled fields are included.</span></div>
   <pre id="summary" tabindex="0"></pre>
 </div></section>
@@ -1215,6 +1272,7 @@ function renderAttn(r){
   if(miss.length)it.push(["info",`Missing for calculations: ${miss.map(x=>x[1]).join(", ")}.`,"clerking",miss[0][2]]);
   attnState={crit:it.filter(x=>x[0]==="crit").length,warn:it.filter(x=>x[0]==="warn").length,info:it.filter(x=>x[0]==="info").length};
   const lab={crit:"Urgent",warn:"Check",info:"To do"};
+  $("attn").className="attn "+(attnState.crit?"has-crit":attnState.warn?"has-warn":it.length?"has-info":"");
   $("attn").innerHTML=it.length?`<h3><span>Needs attention</span><span class="note" style="text-transform:none;letter-spacing:0">${it.length} item${it.length>1?"s":""}</span></h3>`+it.map(([c,t,tab,sec])=>`<div class="ai ${c}"><span class="sv">${lab[c]}</span><span class="tx">${esc(t)}</span><button type="button" data-tab="${tab}" data-sec="${sec}">Go</button></div>`).join(""):`<div class="attn-ok">No alerts for this patient.</div>`;
 }
 $("attn").addEventListener("click",e=>{const b=e.target.closest("button[data-tab]");if(b)goTo(b.dataset.tab,b.dataset.sec)});
@@ -1258,7 +1316,7 @@ function buildPrint(secs){const v=id=>$(id).value.trim();const g=radio("gender")
 const TABS=["patients","clerking","reviews","fluids","guide","note"];let curTab="clerking";
 function showTab(t,keepScroll){if(!TABS.includes(t))t="clerking";curTab=t;
   document.querySelectorAll("main section.sh[data-tab]").forEach(x=>x.hidden=x.dataset.tab!==t);
-  document.querySelectorAll("#tabs button").forEach(b=>{if(b.dataset.tab===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  document.querySelectorAll("#tabs button").forEach(b=>{if(b.dataset.tab===t){b.setAttribute("aria-current","page");const c=$("tabs"),br=b.getBoundingClientRect(),cr=c.getBoundingClientRect();if(br.left<cr.left||br.right>cr.right)c.scrollLeft+=br.left-cr.left-16}else b.removeAttribute("aria-current")});
   $("idx").hidden=t!=="clerking";document.querySelector(".shell").classList.toggle("noidx",t!=="clerking");
   $("attn").hidden=(t==="patients"||t==="guide");
   if(t==="patients")renderPatients();
