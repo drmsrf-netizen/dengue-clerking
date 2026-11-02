@@ -134,6 +134,105 @@ table.trend tr:last-child td{border-bottom:0}
 .qbar.near div{background:var(--warn)}.qbar.over div{background:var(--crit)}
 table.fx td{white-space:normal;vertical-align:top}
 table.fx td:first-child{font-weight:700;white-space:nowrap}
+.gd{border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+.gd>summary{cursor:pointer;padding:9px 12px;font-weight:700;list-style:none;display:flex;align-items:center;gap:8px}
+.gd>summary::-webkit-details-marker{display:none}
+.gd>summary::before{content:"";width:7px;height:7px;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);transition:transform .15s;flex:none}
+.gd[open]>summary::before{transform:rotate(45deg)}
+.gd>summary:hover{background:var(--bg)}
+.gd>summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.gb{padding:4px 14px 14px;display:flex;flex-direction:column;gap:8px;font-size:14px;max-width:80ch}
+.gb ul,.gb ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.gb p{margin:0}
+.gb h4{margin:6px 0 0;font-family:var(--f-display);font-size:14px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.gb ol.steps>li::marker{font-family:var(--f-mono);color:var(--accent);font-weight:500}
+table.gt{border-collapse:collapse;width:100%;font-size:13px}
+table.gt th,table.gt td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+table.gt tbody th{white-space:nowrap;color:var(--ink);width:1%}
+table.gt thead th{background:var(--bar);font-family:var(--f-display);letter-spacing:.04em;font-weight:600}
+table.gt.num td{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.guide-actions{display:flex;gap:6px;flex-wrap:wrap}
+#s-guide .body{gap:10px}
+
+/* ---------- tabs, index, attention, patients, action bar ---------- */
+:root{--hdr:120px}
+.tabs{flex:1 1 100%;display:flex;gap:2px;overflow-x:auto;margin-bottom:-11px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;padding:8px 12px 9px;font-family:var(--f-display);font-size:16px;font-weight:600;letter-spacing:.03em;color:var(--muted);white-space:nowrap}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tabs .cnt{font-family:var(--f-mono);font-size:11px;font-weight:500;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:0 6px;margin-left:5px;vertical-align:1px}
+.tabs .cnt:empty{display:none}
+section.sh{scroll-margin-top:calc(var(--hdr) + 12px)}
+nav.idx{top:calc(env(safe-area-inset-top,0px) + var(--hdr) + 16px)}
+.shell.noidx{grid-template-columns:minmax(0,1fr)}
+.idxh{font-family:var(--f-display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 10px 4px}
+.idxp{font-size:12px;color:var(--muted);padding:6px 10px 0}
+nav.idx button.go{display:flex;align-items:center;gap:9px;text-align:left;border:0;background:none;color:var(--muted);font-size:14px;padding:6px 10px;border-radius:4px}
+nav.idx button.go:hover{color:var(--ink);background:var(--surface)}
+.tk{width:15px;height:15px;border-radius:50%;border:2px solid var(--line);flex:none;position:relative;box-sizing:border-box}
+.tk.part{border-color:var(--warn);background:linear-gradient(90deg,var(--warn) 50%,transparent 50%)}
+.tk.done{border-color:var(--ok);background:var(--ok)}
+.tk.done::after{content:"";position:absolute;left:3.5px;top:0.5px;width:3px;height:7px;border:solid var(--surface);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.tk.opt{border-style:dashed}
+@media (max-width:860px){nav.idx{position:static}nav.idx .idxh,nav.idx .idxp{width:100%;padding-left:0}
+  nav.idx button.go{border:1px solid var(--line);background:var(--surface);padding:5px 9px;font-size:13px}}
+.attn{background:var(--surface);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.attn h3{padding:8px 12px;background:var(--bar);color:var(--ink);display:flex;justify-content:space-between;gap:8px}
+.ai{display:flex;gap:10px;align-items:center;padding:8px 12px;border-top:1px solid var(--line);border-left:4px solid var(--line);font-size:14px}
+.ai.crit{border-left-color:var(--crit)}.ai.warn{border-left-color:var(--warn)}.ai.info{border-left-color:var(--accent)}
+.ai .tx{flex:1;min-width:0}
+.ai .sv{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.04em;flex:none;width:52px}
+.ai.crit .sv{color:var(--crit)}.ai.warn .sv{color:var(--warn)}.ai.info .sv{color:var(--accent)}
+.ai button{padding:4px 10px;font-size:13px;flex:none}
+.attn-ok{padding:8px 12px;color:var(--ok);background:var(--ok-soft);border-radius:4px;font-size:14px}
+.ptlist{display:flex;flex-direction:column;gap:8px}
+.pt{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;border:1px solid var(--line);border-radius:4px;padding:8px 10px;background:var(--bg)}
+.pt.cur{border-color:var(--accent);background:var(--accent-soft)}
+.ptmain{flex:1 1 300px;display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:4px 12px;align-items:center;text-align:left;border:0;background:none;padding:2px;min-width:0;color:var(--ink);cursor:pointer}
+.ptbed{font-family:var(--f-mono);font-size:15px;font-weight:500;overflow-wrap:anywhere}
+.ptname{min-width:0}.ptname b{display:block;overflow-wrap:anywhere}.ptname small{color:var(--muted);font-size:12px}
+.ptmeta{grid-column:2/-1;display:flex;flex-wrap:wrap;gap:6px}
+.ptacts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.ptacts button{padding:4px 10px;font-size:13px}
+.ptempty{padding:16px;border:1px dashed var(--line);border-radius:4px;color:var(--muted);text-align:center}
+.filebtn{position:relative;display:inline-flex}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;font-size:0}
+.filebtn span{font-size:14px;border-radius:4px;padding:7px 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.filebtn input:focus-visible+span{outline:2px solid var(--accent);outline-offset:1px}
+.actbar{position:fixed;left:0;right:0;bottom:0;z-index:9;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.actin{max-width:1240px;margin:0 auto;padding-block:8px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.actin .who{margin-right:auto;font-size:13px;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45%}
+.shell{padding-bottom:110px}
+.toast{bottom:calc(72px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:center}
+.toast button{background:none;border:1px solid currentColor;color:inherit;padding:3px 10px;font-size:13px}
+@media (max-width:520px){.actin .who,#abSave{display:none!important}.actin button{flex:1 1 0;white-space:nowrap;padding:7px 6px;font-size:13px}
+  .top .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;width:100%}.top .chips .chip{flex:none}
+  .brand b{font-size:19px}.tabs button{padding:8px 9px 9px;font-size:15px}}
+@media (pointer:coarse){.opt{padding:10px 12px;min-height:44px;align-items:center}button,.filebtn span{min-height:42px}
+  input[type=text],input[type=number],input[type=date],input[type=datetime-local],select{min-height:44px}.tabs button{min-height:44px}}
+#printView{display:none}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff!important;color:#000!important}
+  body::before{display:none!important}
+  body>*:not(#printView){display:none!important}
+  #printView{display:block;font:10.5pt/1.4 Arial,Helvetica,sans-serif;color:#000}
+  .pv-h{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:8px}
+  .pv-h b{display:block;font-size:13pt}.pv-h span{font-size:9pt}
+  .pv-box{width:100%;border-collapse:collapse;margin-bottom:8px}
+  .pv-box td{border:1px solid #000;padding:3px 6px;vertical-align:top;font-size:10pt}
+  .pv-box small{display:block;font-size:7.5pt;text-transform:uppercase;color:#333}
+  .pv-s{break-inside:avoid;margin-bottom:6px}
+  .pv-s h2{font-size:10pt;margin:0 0 3px;background:#ddd;padding:2px 6px;text-transform:uppercase;letter-spacing:.03em;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pv-s p{margin:0 0 1px 6px;white-space:pre-wrap}
+  .pv-s table{width:100%;border-collapse:collapse;font-size:8.5pt}
+  .pv-s th,.pv-s td{border:1px solid #666;padding:2px 4px;text-align:left}
+  .pv-s .note{font-size:8pt}.pv-s .st{border:1px solid #000;padding:0 3px}
+  .pv-sign{display:flex;justify-content:space-between;gap:20px;margin-top:18px;font-size:10pt}
+  .pv-f{margin-top:10px;font-size:8pt;color:#333;border-top:1px solid #999;padding-top:4px}
+}
 footer{font-size:12px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 html{scroll-behavior:smooth}
@@ -145,28 +244,53 @@ html{scroll-behavior:smooth}
 <header class="top"><div class="wrap">
   <div class="brand"><small>Inpatient Dengue Assessment · Appendix 9</small><b id="hdrName">New patient</b></div>
   <div class="chips" id="chips"></div>
+  <nav class="tabs" id="tabs" aria-label="Views">
+    <button type="button" data-tab="patients">Patients<span class="cnt" id="ptCount"></span></button>
+    <button type="button" data-tab="clerking">Clerking</button>
+    <button type="button" data-tab="reviews">Reviews<span class="cnt" id="revCount"></span></button>
+    <button type="button" data-tab="fluids">Fluids</button>
+    <button type="button" data-tab="guide">CPG guide</button>
+    <button type="button" data-tab="note">Note</button>
+  </nav>
 </div></header>
 
 <div class="wrap"><div class="shell">
-<nav class="idx" aria-label="Sections">
-  <a href="#s-pt">Patient</a><a href="#s-risk">Risk factors</a><a href="#s-inv">Investigations</a>
-  <a href="#s-hx">History &amp; warning signs</a><a href="#s-sev">Illness severity</a><a href="#s-exam">Examination</a>
-  <a href="#s-dx">Diagnosis</a><a href="#s-io">Fluid balance</a><a href="#s-fluid">Fluid calculator</a><a href="#s-mx">Management</a><a href="#s-rev">Serial reviews</a><a href="#s-sum">Summary note</a>
-  <div class="tools">
-    <button type="button" id="btnNew" class="danger">Clear form</button>
-    <div class="confirm" id="confirmBox" hidden>Erase this patient? <button type="button" id="btnYes" class="danger">Erase</button><button type="button" id="btnNo">Keep</button></div>
-    <button type="button" id="btnExample">Load example</button>
-  </div>
+<nav class="idx" id="idx" aria-label="Clerking sections">
+  <div class="idxh">Clerking sections</div>
+  <button type="button" class="go" data-go="s-pt"><i class="tk" id="tk-s-pt"></i>Patient</button>
+  <button type="button" class="go" data-go="s-risk"><i class="tk" id="tk-s-risk"></i>Risk factors</button>
+  <button type="button" class="go" data-go="s-inv"><i class="tk" id="tk-s-inv"></i>Investigations</button>
+  <button type="button" class="go" data-go="s-hx"><i class="tk" id="tk-s-hx"></i>History &amp; warning signs</button>
+  <button type="button" class="go" data-go="s-sev"><i class="tk" id="tk-s-sev"></i>Illness severity</button>
+  <button type="button" class="go" data-go="s-exam"><i class="tk" id="tk-s-exam"></i>Examination</button>
+  <button type="button" class="go" data-go="s-dx"><i class="tk" id="tk-s-dx"></i>Diagnosis</button>
+  <button type="button" class="go" data-go="s-io"><i class="tk" id="tk-s-io"></i>Fluid balance</button>
+  <button type="button" class="go" data-go="s-mx"><i class="tk" id="tk-s-mx"></i>Management</button>
+  <div class="idxp" id="idxProg"></div>
 </nav>
 
 <main>
-<div class="banner" id="exBanner" hidden><span>Showing an <b>example patient</b> so you can see the calculations. Clear the form to start a real clerking.</span></div>
+<div class="banner" id="exBanner" hidden><span>This is an <b>example patient</b> to show how the app works. Add your own patient from the Patients tab.</span></div>
+<div class="attn" id="attn" aria-live="polite"></div>
+
+<!-- PATIENTS -->
+<section class="sh" id="s-patients" data-tab="patients" data-nosave><h2>Patients on this PC</h2><div class="body">
+  <div class="row" style="align-items:center;gap:8px">
+    <button type="button" class="primary" id="btnNewPt">New patient</button>
+    <button type="button" id="btnExample">Add example patient</button>
+    <label class="filebtn"><input type="file" id="fileOpen" accept=".json,application/json"><span>Open patient file</span></label>
+    <button type="button" id="btnSaveAll" class="toponly" hidden>Save all to file</button>
+  </div>
+  <div id="ptList" class="ptlist"></div>
+  <div class="note">Patients are stored only in this browser on this PC. Use <b>Save patient file</b> to move a patient to another PC at handover. Patient files contain identifiable details: keep them on MOH devices and delete them once opened on the new PC.</div>
+</div></section>
 
 <!-- PATIENT -->
-<section class="sh" id="s-pt"><h2>Patient demographic data</h2><div class="body">
+<section class="sh" id="s-pt" data-tab="clerking"><h2>Patient demographic data</h2><div class="body">
   <div class="grid wide">
     <label class="f"><span>Date &amp; time of clerking</span><input type="datetime-local" id="clerkDT"></label>
     <label class="f"><span>Name</span><input type="text" id="name" autocomplete="off"></label>
+    <label class="f"><span>Bed / ward</span><input type="text" id="bed" autocomplete="off"></label>
   </div>
   <div class="grid">
     <label class="f"><span>Age <em>years</em></span><input type="number" id="age" min="0" max="120"></label>
@@ -187,13 +311,13 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- RISK -->
-<section class="sh" id="s-risk"><h2>Risk factors / special populations</h2><div class="body">
+<section class="sh" id="s-risk" data-tab="clerking"><h2>Risk factors / special populations</h2><div class="body">
   <div class="opts warnset" id="risk"></div>
   <label class="f"><span>Others</span><input type="text" id="riskOther"></label>
 </div></section>
 
 <!-- INVESTIGATIONS -->
-<section class="sh" id="s-inv"><h2>Investigations</h2><div class="body">
+<section class="sh" id="s-inv" data-tab="clerking"><h2>Investigations</h2><div class="body">
   <h3>Dengue diagnostic test</h3>
   <div class="grid">
     <label class="f"><span>NS1</span><select id="ns1"><option value="">—</option><option>Positive</option><option>Negative</option><option>Not done</option></select></label>
@@ -210,10 +334,11 @@ html{scroll-behavior:smooth}
   <h3>Renal profile</h3><div class="lab" id="labRenal"></div>
   <h3>Liver function tests</h3><div class="lab" id="labLft"></div>
   <h3>Others</h3><div class="lab" id="labOther"></div>
+  <div class="note">↑/↓ flags use typical adult reference ranges. Follow your own laboratory's ranges where they differ.</div>
 </div></section>
 
 <!-- HISTORY -->
-<section class="sh" id="s-hx"><h2>History of presenting illness</h2><div class="body">
+<section class="sh" id="s-hx" data-tab="clerking"><h2>History of presenting illness</h2><div class="body">
   <div class="grid wide">
     <label class="f"><span>Date of fever onset <em>(day 1)</em></span><input type="date" id="feverOnset"></label>
     <div class="f"><span>Current day of illness</span><div class="calc" id="dayOut">—</div></div>
@@ -225,7 +350,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- SEVERITY -->
-<section class="sh" id="s-sev"><h2>Illness severity assessment</h2><div class="body">
+<section class="sh" id="s-sev" data-tab="clerking"><h2>Illness severity assessment</h2><div class="body">
   <div class="f"><span>a) Level of daily activities during illness</span><div class="opts col" id="sevA"></div></div>
   <div class="f"><span>b) Fluid intake (past 24–48 hours)</span><div class="opts" id="sevB"></div></div>
   <div class="f"><span>c) Frequency of urination (past 24 hours)</span><div class="opts" id="sevC"></div></div>
@@ -234,7 +359,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- EXAM -->
-<section class="sh" id="s-exam"><h2>Clinical examination</h2><div class="body">
+<section class="sh" id="s-exam" data-tab="clerking"><h2>Clinical examination</h2><div class="body">
   <div class="grid">
     <label class="f"><span>Weight <em>kg</em></span><input type="number" id="wt" step="0.1"></label>
     <label class="f"><span>Height <em>cm</em></span><input type="number" id="ht" step="0.5"></label>
@@ -281,7 +406,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- DIAGNOSIS -->
-<section class="sh" id="s-dx"><h2>Diagnosis</h2><div class="body">
+<section class="sh" id="s-dx" data-tab="clerking"><h2>Diagnosis</h2><div class="body">
   <div class="hint" id="dxHint"></div>
   <div class="row">
     <div class="f"><span>Days of illness</span><div class="calc" id="dayOut2">—</div></div>
@@ -297,7 +422,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- I/O -->
-<section class="sh" id="s-io"><h2>Cumulative I/O since presentation to healthcare</h2><div class="body">
+<section class="sh" id="s-io" data-tab="clerking"><h2>Cumulative I/O since presentation to healthcare</h2><div class="body">
   <div class="grid wide">
     <label class="f"><span>Total intake <em>oral + IV fluid / blood products, ml</em></span><input type="number" id="ioIn"></label>
     <label class="f"><span>Total output <em>urine + GI losses, ml</em></span><input type="number" id="ioOut"></label>
@@ -310,7 +435,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- FLUID CALCULATOR -->
-<section class="sh" id="s-fluid"><h2>Fluid calculator · CPG 4th edition</h2><div class="body">
+<section class="sh" id="s-fluid" data-tab="fluids"><h2>Fluid calculator · CPG 4th edition</h2><div class="body">
   <div class="grid">
     <div class="f"><span>Fluid weight</span><div class="calc" id="fxW">—</div></div>
     <div class="f"><span>Weight for maintenance &amp; quota <em>cap 70 kg</em></span><div class="calc" id="fxCap">—</div></div>
@@ -339,7 +464,7 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- MANAGEMENT -->
-<section class="sh" id="s-mx"><h2>Management</h2><div class="body">
+<section class="sh" id="s-mx" data-tab="clerking"><h2>Management</h2><div class="body">
   <label class="f"><span>1) Fluid management (type, rate, amount)</span><textarea id="mx1"></textarea></label>
   <label class="f"><span>2) Blood investigations</span><textarea id="mx2"></textarea></label>
   <label class="f"><span>3) Time for next blood taking, bedside review and revision of drip regime</span><textarea id="mx3"></textarea></label>
@@ -368,8 +493,174 @@ html{scroll-behavior:smooth}
   </div>
 </div></section>
 
+<!-- CPG FLUID GUIDE -->
+<section class="sh" id="s-guide" data-tab="guide"><h2>Dengue fluid management · CPG summary</h2><div class="body">
+  <div class="note">Summary of fluid management from the CPG Management of Dengue in Adults (4th edition). Tap a heading to expand it. Use the Fluid calculator above for this patient's rates.</div>
+  <div class="guide-actions"><button type="button" id="btnGuideOpen">Expand all</button><button type="button" id="btnGuideClose">Collapse all</button></div>
+
+  <details class="gd" open><summary>Key principles</summary><div class="gb">
+    <ul>
+      <li>Fluid therapy is the main life-saving treatment. Aim for enough intravascular volume through the 24–48 h leak, then reduce early to avoid overload when reabsorption begins.</li>
+      <li>Crystalloid is the fluid of choice. Adjust frequently based on clinical response, not a fixed regimen.</li>
+      <li>Judge response on <b>clinical condition, vital signs, CCTVR and urine output together</b>. Never bolus on a single parameter.</li>
+      <li>Blood and blood products count towards the cumulative fluid total.</li>
+    </ul>
+    <h4>Common pitfalls</h4>
+    <ul>
+      <li>Boluses in the febrile phase; prolonged fixed regimens in stable patients; IV fluids continued into recovery.</li>
+      <li>Infrequent monitoring and late adjustment of rates.</li>
+      <li>Boluses for a rising HCT, tachycardia or cool peripheries alone, without full assessment.</li>
+      <li>Colloids (e.g. albumin) used for maintenance.</li>
+      <li>Excess fluid in heart failure or kidney disease.</li>
+    </ul>
+  </div></details>
+
+  <details class="gd"><summary>Weight for fluid calculation</summary><div class="gb">
+    <table class="gt"><tbody>
+      <tr><th>BMI ≤27.5</th><td>Use actual body weight</td></tr>
+      <tr><th>BMI &gt;27.5</th><td>Use adjusted body weight: ABW = IBW + 0.4 × (actual weight − IBW)</td></tr>
+      <tr><th>IBW</th><td>Male 50 kg / female 45.5 kg + 0.91 × (height in cm − 152)</td></tr>
+      <tr><th>70 kg cap</th><td>Maintenance and fluid quota are calculated on a maximum of 70 kg</td></tr>
+      <tr><th>Pregnancy</th><td>Use pre-pregnancy or booking weight</td></tr>
+    </tbody></table>
+  </div></details>
+
+  <details class="gd"><summary>Febrile phase</summary><div class="gb">
+    <ul>
+      <li>Keep a cannula in situ. Encourage oral fluids.</li>
+      <li>Start IV crystalloid only if unable to tolerate orally or dehydrated.</li>
+      <li>Total requirement (oral + IV) by <b>Holliday-Segar</b>: 4 ml/kg/hr for the first 10 kg, 2 ml/kg/hr for the next 10 kg, 1 ml/kg/hr thereafter.</li>
+      <li>Add fluid for vomiting, diarrhoea or dehydration. Reduce or stop IV once oral intake improves.</li>
+    </ul>
+    <div class="tscroll"><table class="gt num"><thead><tr><th>Weight (kg)</th><th>30</th><th>40</th><th>50</th><th>60</th><th>≥70</th></tr></thead>
+      <tbody><tr><th>Maintenance (ml/hr)</th><td>70</td><td>80</td><td>90</td><td>100</td><td>110</td></tr></tbody></table></div>
+  </div></details>
+
+  <details class="gd"><summary>Critical phase: recognition and fluid quota</summary><div class="gb">
+    <h4>Indicators of critical phase</h4>
+    <ul>
+      <li>Rapid drop in temperature (some still have low-grade fever early in the leak).</li>
+      <li>HCT rise ≥20% from baseline.</li>
+      <li>Platelets &lt;100 ×10⁹/L (earliest and most useful indicator).</li>
+      <li>Plasma leakage on POCUS: pericholecystic fluid, thickened GB wall, ascites, pleural effusion.</li>
+    </ul>
+    <p>Leak usually peaks around 24 h and resolves within 48 h. Patients presenting in shock may already be ~24 h into the leak; those with uncorrected dehydration may be early in it.</p>
+    <h4>Fluid quota (critical phase without shock)</h4>
+    <ul>
+      <li><b>Maintenance + 5% deficit</b> (5% = 50 ml/kg), oral and IV combined, as the <b>maximum over 48 h</b>. Calculate at the start of the critical phase.</li>
+      <li>Not a target: many patients need less.</li>
+      <li><b>Does not apply once the patient is in shock</b>, or in DKA/HHS.</li>
+      <li>Example, 60 kg: 2,400 ml (1 day maintenance) + 3,000 ml = 5,400 ml over 48 h.</li>
+    </ul>
+    <div class="tscroll"><table class="gt num"><thead><tr><th>Weight (kg)</th><th>Quota 48 h (ml)</th><th>R1 1 ml/kg/h</th><th>R2 2</th><th>R3 3</th><th>R5 5</th><th>R7 7</th></tr></thead><tbody>
+      <tr><td>40</td><td>3,900</td><td>40</td><td>80</td><td>120</td><td>200</td><td>280</td></tr>
+      <tr><td>45</td><td>4,300</td><td>45</td><td>90</td><td>135</td><td>225</td><td>315</td></tr>
+      <tr><td>50</td><td>4,700</td><td>50</td><td>100</td><td>150</td><td>250</td><td>350</td></tr>
+      <tr><td>55</td><td>5,000</td><td>55</td><td>110</td><td>165</td><td>275</td><td>385</td></tr>
+      <tr><td>60</td><td>5,400</td><td>60</td><td>120</td><td>180</td><td>300</td><td>420</td></tr>
+      <tr><td>65</td><td>5,700</td><td>65</td><td>130</td><td>195</td><td>325</td><td>455</td></tr>
+      <tr><td>≥70</td><td>6,000</td><td>70</td><td>140</td><td>210</td><td>350</td><td>490</td></tr>
+    </tbody></table></div>
+    <h4>Urine output</h4>
+    <ul><li>Calculate ml/kg/hr at each void. Target 0.5–1 ml/kg/hr. Consider early catheterisation if monitoring is difficult or the patient is high risk.</li></ul>
+  </div></details>
+
+  <details class="gd"><summary>Algorithm 1 · warning signs, no shock (Group B2)</summary><div class="gb">
+    <ol class="steps">
+      <li>Start IV crystalloid <b>3–5 ml/kg/hr for 1 hour</b>.</li>
+      <li><b>Improving:</b> reduce to 2–3 ml/kg/hr for 1–2 hours, then 1–2 ml/kg/hr or maintenance, then stop IV when able to tolerate orally (oral intake 1–2 ml/kg/hr makes IV unnecessary).</li>
+      <li><b>Not improving and not in shock:</b> take FBC/VBG/lactate; increase to <b>5–7 ml/kg/hr</b> while awaiting results and titrate.</li>
+      <li><b>Shock develops:</b> go to Algorithm 2 or 3.</li>
+    </ol>
+    <p>Total fluid must stay within the 48 h quota. FBC every 4–12 hours in the critical phase.</p>
+  </div></details>
+
+  <details class="gd"><summary>Algorithm 2 · compensated shock (Group C)</summary><div class="gb">
+    <p><b>Definition:</b> SBP maintained with signs of reduced perfusion: a combination of tachycardia, cold peripheries, CRT &gt;3 s, PP 20–30 mmHg, low pulse volume.</p>
+    <ol class="steps">
+      <li>Send FBC, RP, LFT, RBS, PT/APTT, CK, VBG/lactate/HCO₃, GXM. Give crystalloid <b>10 ml/kg/hr for 1 hour</b>.</li>
+      <li><b>Improving:</b> 5–7 ml/kg/hr for 1–2 h → 3–5 ml/kg/hr for 2–4 h → 2–3 ml/kg/hr for 2–4 h → reduce further. HCT 4–6 hourly.</li>
+      <li><b>Not improving:</b> repeat HCT and run a second 10 ml/kg/hr crystalloid bolus while waiting.
+        <ul>
+          <li>HCT <b>dropped ≥20%</b>: consider significant occult/overt bleed → Algorithm 4.</li>
+          <li>HCT <b>rose ≥20% or unchanged</b>: continue the second bolus. Still not improving → repeat HCT and give <b>colloid 10–20 ml/kg/hr for 1 hour</b>, then switch back to crystalloid once improving.</li>
+        </ul></li>
+    </ol>
+    <p>After stabilising: HCT rise ≥20% → consider increasing regimen; HCT fall → consider transfusion. Shock may recur. Consider stopping IV fluid at 48 h of plasma leakage.</p>
+  </div></details>
+
+  <details class="gd"><summary>Algorithm 3 · decompensated shock (Group C)</summary><div class="gb">
+    <p><b>Definition:</b> hypotension with signs of reduced perfusion: tachycardia/bradycardia, cold clammy, CRT &gt;3 s, PP &lt;20 mmHg, thready pulse.</p>
+    <ol class="steps">
+      <li>Send HCT/FBC, RP, LFT, RBS, PT/APTT, CK, lactate/HCO₃, GXM. Give <b>20 ml/kg crystalloid over 15–30 minutes</b>.</li>
+      <li><b>Improving:</b> 10 ml/kg/hr for 1 h → 5–7 ml/kg/hr for 2–4 h → 3–5 ml/kg/hr for 2–4 h → 2–3 ml/kg/hr for 2–4 h → reduce further. HCT 2–4 hourly or more often.</li>
+      <li><b>Not improving:</b> repeat HCT and run a second bolus of <b>10–20 ml/kg colloid or crystalloid</b> while waiting.
+        <ul>
+          <li>HCT <b>rose ≥20% or unchanged</b>: continue 10–20 ml/kg over 30–60 minutes.</li>
+          <li>HCT <b>dropped ≥20%</b>: suspect significant bleed; transfuse packed red cells and/or blood components.</li>
+          <li>Still not improving → Algorithm 4.</li>
+        </ul></li>
+    </ol>
+    <p>Manage shock in HDU/ICU, but do not delay resuscitation while waiting for the bed. Consider stopping IV fluid at 48 h of plasma leakage.</p>
+  </div></details>
+
+  <details class="gd"><summary>Algorithm 4 · refractory / persistent shock</summary><div class="gb">
+    <p>Use POCUS and haemodynamic assessment to identify the type of shock (more than one may coexist):</p>
+    <table class="gt"><tbody>
+      <tr><th>Hypovolaemic</th><td>Bleeding and leaking: find the source (e.g. OGDS), look for leak (USG, CXR), check coagulopathy, transfuse packed red cells and components.</td></tr>
+      <tr><th>Distributive</th><td>Septic shock: antibiotics + vasopressors. Cytokine storm: vasopressors ± steroids. Acute liver failure: supportive care + vasopressors.</td></tr>
+      <tr><th>Cardiogenic</th><td>Myocardial dysfunction: inotropes (noradrenaline, dobutamine, adrenaline, milrinone). Arrhythmia: anti-arrhythmics.</td></tr>
+      <tr><th>Obstructive</th><td>Cardiac tamponade: pericardiocentesis after expert consultation.</td></tr>
+    </tbody></table>
+    <ul>
+      <li>Further fluid guided by <b>fluid responsiveness</b> (preferably passive leg raise with direct CO/SV measurement; PPV/SVV or EEOT if ventilated) and <b>fluid tolerance</b> (breathlessness, rising O₂ need, pulmonary oedema, raised JVP, B-lines/VExUS).</li>
+      <li>IVC measurement is an adjunct only, never the sole guide.</li>
+      <li>Persistent shock with <b>high HCT</b> → consider colloid. With <b>dropped HCT</b> → suspect occult bleeding and transfuse promptly.</li>
+      <li>Noradrenaline is the preferred vasopressor for shock persisting despite adequate fluid.</li>
+    </ul>
+  </div></details>
+
+  <details class="gd"><summary>Choice of fluid and blood products</summary><div class="gb">
+    <ul>
+      <li><b>Crystalloid first line:</b> balanced (Hartmann's, Sterofundin) or 0.9% saline. No proven outcome difference; balanced solutions cause less hyperchloraemia.</li>
+      <li><b>Colloid:</b> albumin 5% is the colloid of choice, for persistent shock only. Avoid gelatin. Never use colloid for maintenance.</li>
+      <li><b>Blood:</b> packed red cells <b>5–10 ml/kg</b> for significant bleeding; repeat if further loss or no appropriate HCT rise. Do not wait for a marked HCT fall, as earlier haemoconcentration masks it.</li>
+      <li>Fibrinogen &lt;100 mg/dL → cryoprecipitate. Fibrinogen ≥100 with PT/APTT &gt;1.5× normal → consider FFP. Correct coagulopathy only with clinically significant bleeding.</li>
+    </ul>
+  </div></details>
+
+  <details class="gd"><summary>Signs of effective resuscitation</summary><div class="gb">
+    <div class="two">
+      <div><h4>Clinical</h4><ul><li>Better general well-being / mental state</li><li>Warm peripheries</li><li>CRT ≤3 s</li><li>Stable BP</li><li>Improving pulse pressure</li><li>Reducing tachycardia</li><li>Improving urine output</li><li>Less tachypnoea</li></ul></div>
+      <div><h4>Laboratory</h4><ul><li>Appropriate decrease in HCT</li><li>Improving metabolic acidosis and lactate</li></ul></div>
+    </div>
+    <p>Interpret all parameters together, not in isolation.</p>
+  </div></details>
+
+  <details class="gd"><summary>Recovery phase</summary><div class="gb">
+    <ul>
+      <li>Signs: improving appetite and well-being, convalescent rash, diuresis, rising platelets, stable HCT, normalising organ function.</li>
+      <li>Reduce or stop IV fluids promptly to avoid overload. POCUS can show plasma resorption before clinical improvement.</li>
+      <li>Restart withheld antihypertensives gradually once haemodynamically stable.</li>
+    </ul>
+  </div></details>
+
+  <details class="gd"><summary>Special populations</summary><div class="gb">
+    <table class="gt"><tbody>
+      <tr><th>Heart failure</th><td>Early admission. Reduce fluid volumes. Early cardiology input. Consider loop diuretics if overloaded and haemodynamically stable.</td></tr>
+      <tr><th>CKD 3b+ / ESKD</th><td>Early admission. Reduce fluid volumes. Early nephrology input for KRT planning if oliguric. Interpret HCT against the patient's own baseline.</td></tr>
+      <tr><th>Liver cirrhosis</th><td>Individualised fluids with close monitoring. Risk of GI bleed and severe shock. IV vitamin K if PT/INR prolonged.</td></tr>
+      <tr><th>Diabetes / DKA / HHS</th><td>DKA/HHS: follow the DKA/HHS fluid regimen (may exceed quota). Osmotic diuresis can give falsely reassuring urine output. Stop oral hypoglycaemics; use insulin.</td></tr>
+      <tr><th>Hypertension</th><td>A "normal" BP may be relative hypotension: compare with baseline. Consider withholding antihypertensives in the critical phase.</td></tr>
+      <tr><th>Elderly</th><td>Individualised, cautious fluids: high risk of overload, pulmonary oedema and heart failure.</td></tr>
+      <tr><th>Pregnancy</th><td>Same approach as non-pregnant, given cautiously with monitoring for pulmonary oedema. Multidisciplinary care.</td></tr>
+      <tr><th>Obesity</th><td>Use ABW-based dosing with frequent monitoring, especially in shock.</td></tr>
+    </tbody></table>
+  </div></details>
+</div></section>
+
 <!-- REVIEWS -->
-<section class="sh" id="s-rev"><h2>Serial reviews</h2><div class="body">
+<section class="sh" id="s-rev" data-tab="reviews"><h2>Serial reviews</h2><div class="body">
   <div id="revTrend"></div>
   <div id="revList" class="revlist"></div>
 
@@ -395,10 +686,10 @@ html{scroll-behavior:smooth}
     <div class="lab">
       <label class="f"><span>HCT <em>%</em></span><input type="number" step="any" id="rHct"><span class="flag" id="rHctD"></span></label>
       <label class="f"><span>PLT <em>×10⁹/L</em></span><input type="number" step="any" id="rPlt"><span class="flag" id="rPltD"></span></label>
-      <label class="f"><span>VBG pH</span><input type="number" step="any" id="rPh"><span class="flag"></span></label>
-      <label class="f"><span>HCO₃ <em>mmol/L</em></span><input type="number" step="any" id="rHco3"><span class="flag"></span></label>
-      <label class="f"><span>Base excess <em>mmol/L</em></span><input type="number" step="any" id="rBe"><span class="flag"></span></label>
-      <label class="f"><span>Lactate <em>mmol/L</em></span><input type="number" step="any" id="rLact"><span class="flag"></span></label>
+      <label class="f"><span>VBG pH</span><input type="number" step="any" id="rPh"><span class="flag" id="fl_rPh"></span></label>
+      <label class="f"><span>HCO₃ <em>mmol/L</em></span><input type="number" step="any" id="rHco3"><span class="flag" id="fl_rHco3"></span></label>
+      <label class="f"><span>Base excess <em>mmol/L</em></span><input type="number" step="any" id="rBe"><span class="flag" id="fl_rBe"></span></label>
+      <label class="f"><span>Lactate <em>mmol/L</em></span><input type="number" step="any" id="rLact"><span class="flag" id="fl_rLact"></span></label>
     </div>
     <label class="f"><span>ECG findings</span><textarea id="rEcg" placeholder="e.g. sinus rhythm, no ST–T changes"></textarea></label>
     <h3>Fluid balance</h3>
@@ -434,15 +725,23 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- SUMMARY -->
-<section class="sh" id="s-sum"><h2>Summary note</h2><div class="body">
+<section class="sh" id="s-sum" data-tab="note"><h2>Summary note</h2><div class="body">
   <div class="row" style="align-items:center"><button type="button" class="primary" id="btnCopy">Copy note</button><div class="f"><span>Reviews in note</span><div class="opts" id="sumMode"></div></div><span class="note">Paste into the case notes or HIS. Only filled fields are included.</span></div>
   <pre id="summary" tabindex="0"></pre>
 </div></section>
 
-<footer>Based on Appendix 9, Management of Dengue in Adults (Fourth Edition), CPG Malaysia. Hypotension is taken as SBP &lt;100 mmHg, MAP &lt;65 mmHg, or a fall in SBP of more than 40 mmHg from baseline. Suggestions in this app are aids; the clinician confirms every classification. Entries are saved only in this browser on this device.<br>For suggestions for improvement, please email <a href="mailto:msani.mr@moh.gov.my" style="color:var(--accent)">msani.mr@moh.gov.my</a>.</footer>
+<footer>Based on Appendix 9, Management of Dengue in Adults (Fourth Edition), CPG Malaysia. Hypotension is taken as SBP &lt;100 mmHg, MAP &lt;65 mmHg, or a fall in SBP of more than 40 mmHg from baseline. Suggestions in this app are aids; the clinician confirms every classification. Entries are saved only in this browser on this device unless you save a patient file.<br>For suggestions for improvement, please email <a href="mailto:msani.mr@moh.gov.my" style="color:var(--accent)">msani.mr@moh.gov.my</a>.</footer>
 </main>
 </div></div>
-<div class="toast" id="toast" hidden></div>
+<div class="actbar" id="actbar"><div class="wrap actin">
+  <span class="who" id="abWho"></span>
+  <button type="button" class="primary" id="abReview">Add review</button>
+  <button type="button" id="abCopy">Copy note</button>
+  <button type="button" id="abSave" class="toponly" hidden>Save patient file</button>
+  <button type="button" id="abPrint" class="toponly" hidden>Print</button>
+</div></div>
+<div id="printView"></div>
+<div class="toast" id="toast" hidden><span id="toastMsg"></span><button type="button" id="toastAct" hidden></button></div>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -608,8 +907,8 @@ function calc(){
   const chips=[];
   chips.push(`<span class="chip ${r.day?"on":""}">${r.day?"Day "+r.day:"Day —"}</span>`);
   chips.push(`<span class="chip ${phase?"on":""}">${phase?lbl("phase",phase):"Phase —"}</span>`);
-  const cl=radio("cls"); const clTxt=cl?({dnws:"DNWS",dwws:"DWWS",sd:"SD"}[cl]):`${sug}?`;
-  chips.push(`<span class="chip ${(cl||sug)==="sd"||clTxt.startsWith("SD")?"crit":clTxt.startsWith("DWWS")?"warn":"on"}">${clTxt}</span>`);
+  const cl=radio("cls"); const clTxt=cl?({dnws:"DNWS",dwws:"DWWS",sd:"SD"}[cl]):(warns.length||num("sbp")!=null||r.shockSug?`${sug}?`:"Class —");
+  chips.push(`<span class="chip ${clTxt==="Class —"?"":(cl||sug)==="sd"||clTxt.startsWith("SD")?"crit":clTxt.startsWith("DWWS")?"warn":"on"}">${clTxt}</span>`);
   if(warns.length)chips.push(`<span class="chip warn">${warns.length} warning sign${warns.length>1?"s":""}</span>`);
   if(reviews.length){const ls=statusOf(sortedReviews().pop());if(ls.c==="crit")chips.push(`<span class="chip crit">${ls.t.replace("?","")} (latest)</span>`);else if(ls.t.startsWith("No shock"))chips.push(`<span class="chip on">No shock (latest)</span>`);}
   else if(r.shockSug||radio("shock")==="y")chips.push(`<span class="chip crit">${radio("shockSub")==="decomp"||r.shockSug==="decomp"?"Decompensated shock":"Compensated shock"}</span>`);
@@ -622,13 +921,17 @@ function calc(){
   lastR=r;
   renderReviews();
   renderFluid();
+  renderAttn(r);
+  updateTicks();
+  labFlags();
+  $("revCount").textContent=reviews.length||"";
   summary(r);
 }
 
 /* ---------- summary ---------- */
 function summary(r){
   const v=id=>$(id).value.trim();
-  const out=[];const sec=(t,lines)=>{lines=lines.filter(Boolean);if(lines.length)out.push(t.toUpperCase(),...lines,"");};
+  const out=[],secs=[];const sec=(t,lines)=>{lines=lines.filter(Boolean);if(lines.length){out.push(t.toUpperCase(),...lines,"");secs.push([t,lines])}};
   const g=radio("gender");
   sec("Inpatient dengue clerking",[
     v("clerkDT")&&`Clerked: ${prettyDT(v("clerkDT"))}`,
@@ -693,9 +996,10 @@ function summary(r){
   const mode=radio("sumMode")||"all";
   if(mode!=="none"&&reviews.length){const rs=sortedReviews();rs.forEach((x,k)=>x.n=k+1);const pick=mode==="latest"?rs.slice(-1):rs;
     out.push(mode==="latest"?"LATEST REVIEW":"SERIAL REVIEWS");
-    pick.forEach(x=>{const d=dayOf(x.dt);out.push(`Review ${x.n} — ${prettyDT(x.dt)}${d?` (Day ${d})`:""}`,...reviewText(x,rs).split("\n").map(l=>"  "+l))});out.push("");}
+    const rl=[];pick.forEach(x=>{const d=dayOf(x.dt);rl.push(`Review ${x.n} — ${prettyDT(x.dt)}${d?` (Day ${d})`:""}`,...reviewText(x,rs).split("\n").map(l=>"  "+l))});out.push(...rl,"");secs.push([mode==="latest"?"Latest review":"Serial reviews",rl]);}
   sec("Clerked by",[[v("by"),v("byDT")&&prettyDT(v("byDT"))].filter(Boolean).join(" · ")]);
   $("summary").textContent=out.join("\n").trim()||"Start filling the form to build the note.";
+  buildPrint(secs);
 }
 
 /* ---------- serial reviews ---------- */
@@ -808,7 +1112,7 @@ $("revList").addEventListener("click",e=>{const b=e.target.closest("button");if(
   if(b.dataset.ed!=null){editIdx=+b.dataset.ed;writeForm(reviews[editIdx]);const n=sortedReviews().findIndex(r=>r._i===editIdx)+1;$("revFormTitle").textContent=`Editing review ${n}`;$("btnRevSave").textContent="Update review";$("btnRevCancel").hidden=false;calc();$("revForm").scrollIntoView({block:"start"})}
   else if(b.dataset.del!=null){delPending=+b.dataset.del;renderReviews()}
   else if(b.dataset.delno){delPending=null;renderReviews()}
-  else if(b.dataset.delyes!=null){const i=+b.dataset.delyes;reviews.splice(i,1);delPending=null;if(editIdx===i)blankForm();else if(editIdx>i)editIdx--;calc();save();toast("Review deleted")}});
+  else if(b.dataset.delyes!=null){const i=+b.dataset.delyes;const gone=reviews.splice(i,1)[0];delPending=null;if(editIdx===i)blankForm();else if(editIdx>i)editIdx--;calc();save();toast("Review deleted","Undo",()=>{reviews.push(gone);calc();save();toast("Review restored")})}});
 
 /* ---------- fluid calculator ---------- */
 const QTABLE={30:3200,35:3600,40:3900,45:4300,50:4700,55:5000,60:5400,65:5700,70:6000};
@@ -850,7 +1154,7 @@ function fxRows(alg,w,cap,maint){
     ["HCT rising or unchanged","Continue 10–20 ml/kg",vol(10,20,w),"Over 30–60 min; if no improvement → Algorithm 4"],
     ["HCT drop ≥20%","Packed red cells 5–10 ml/kg",vol(5,10,w),"Suspect significant bleeding; blood components as needed"]],
     foot:`Volumes use ${fmt(w)} kg (${lastR.fluidSrc}). HCT 2–4 hourly or more often. Consider stopping IV fluid at 48 hours of plasma leakage.`}}
-let fxCurrent=null;
+let fxCurrent=null,fxState={};
 function renderFluid(){
   const w=lastR.dosingWt||null, cap=w?Math.min(w,70):null, maint=cap?maintRate(cap):null;
   $("fxW").textContent=w?`${fmt(w)} kg · ${lastR.fluidSrc}`:"Enter weight & height";
@@ -869,6 +1173,7 @@ function renderFluid(){
   $("fxBar").style.width=Math.max(0,Math.min(100,frac*100))+"%";
   $("fxBarWrap").className="qbar"+(frac>1?" over":frac>0.85?" near":"");
   const sh=currentShock();const qh=$("fxQuotaHint");
+  fxState={frac,started:!!(start&&quota&&given!=null),shock:sh,given,quota};
   if(sh){qh.className="hint crit";qh.innerHTML="<b>Patient is in shock: the fluid quota no longer applies.</b> Resuscitate per Algorithm "+(sh==="decomp"?"3":"2")+"."}
   else if(!w){qh.className="hint";qh.textContent="Enter weight, height and gender to calculate."}
   else if(!start){qh.className="hint";qh.textContent="Enter the start of the critical phase and the cumulative intake at that time to track the quota. Intake is read from the latest review, or the admission I/O."}
@@ -887,16 +1192,109 @@ $("btnFxCopy").onclick=()=>{if(!fxCurrent){toast("Enter weight and height first"
   const txt=fxCurrent.title.split(" · ")[0]+` (${fmt(fxCurrent.wt)} kg): `+fxCurrent.rows.map(r=>`${r[0]} ${r[1]} = ${r[2]} (${r[3].split(" · ")[0]})`).join("; ");
   const el=$("mx1");el.value=(el.value.trim()?el.value.trim()+"\n":"")+txt;calc();save();toast("Added to fluid plan")};
 
-/* ---------- persistence (this browser only) ---------- */
-const KEY="dengue-clerk-v1";
-const fields=()=>[...document.querySelectorAll("main input,main select,main textarea")].filter(e=>e.id);
-function save(){const d={};fields().forEach(e=>{d[e.id]=(e.type==="checkbox"||e.type==="radio")?e.checked:e.value});d._reviews=reviews;try{localStorage.setItem(KEY,JSON.stringify(d))}catch(_){}}
+$("btnGuideOpen").onclick=()=>document.querySelectorAll("#s-guide details").forEach(d=>d.open=true);
+$("btnGuideClose").onclick=()=>document.querySelectorAll("#s-guide details").forEach(d=>d.open=false);
+/* ---------- attention, ticks, lab flags ---------- */
+let attnState={crit:0,warn:0};
+function renderAttn(r){
+  const v=id=>$(id).value.trim();const it=[];
+  const sh=currentShock();
+  if(sh)it.push(["crit",`${sh==="decomp"?"Decompensated":"Compensated"} shock${reviews.length?" on the latest review":""}. Resuscitate per Algorithm ${sh==="decomp"?3:2}.`,"fluids","s-fluid"]);
+  if(r.liver1000)it.push(["crit","AST or ALT ≥1000 U/L: severe organ impairment (severe dengue).","clerking","s-inv"]);
+  const rs=sortedReviews();
+  const uoR=rs.filter(x=>uoRate(x)!=null).pop();
+  if(uoR&&uoRate(uoR)<0.5)it.push(["crit",`Urine output ${fmt(Math.round(uoRate(uoR)*100)/100,2)} ml/kg/hr on the latest review (target 0.5–1).`,"reviews","s-rev"]);
+  if(!sh&&fxState.started){if(fxState.frac>1)it.push(["crit",`Fluid quota exceeded by ${fmtN(fxState.given-fxState.quota)} ml. Reassess for fluid overload.`,"fluids","s-fluid"]);
+    else if(fxState.frac>0.85)it.push(["warn",`${Math.round(fxState.frac*100)}% of the 48-hour fluid quota used.`,"fluids","s-fluid"]);}
+  const last=rs[rs.length-1];
+  if(last&&last.next&&new Date(last.next)<new Date())it.push(["warn",`Review overdue since ${fmtShort(last.next)}.`,"reviews","s-rev"]);
+  const bH=nz(v("bHct"));const hs=[{hct:v("aHct")},...rs].map(x=>nz(x.hct)).filter(x=>x!=null);const lH=hs.length?hs[hs.length-1]:null;
+  if(bH&&lH!=null&&(lH-bH)/bH>=0.2)it.push(["warn",`HCT ${lH}% is ${fmt((lH-bH)/bH*100)}% above baseline (${bH}%).`,rs.length?"reviews":"clerking",rs.length?"s-rev":"s-inv"]);
+  const age=nz(v("age"));if(age!=null&&age<18)it.push(["warn","Age under 18: this sheet is for adults. Use the paediatric dengue CPG.","clerking","s-pt"]);
+  const miss=[[!v("wt"),"weight","s-exam"],[!v("ht"),"height","s-exam"],[!radio("gender"),"gender","s-pt"],[!v("feverOnset"),"date of fever onset","s-hx"]].filter(x=>x[0]);
+  if(miss.length)it.push(["info",`Missing for calculations: ${miss.map(x=>x[1]).join(", ")}.`,"clerking",miss[0][2]]);
+  attnState={crit:it.filter(x=>x[0]==="crit").length,warn:it.filter(x=>x[0]==="warn").length,info:it.filter(x=>x[0]==="info").length};
+  const lab={crit:"Urgent",warn:"Check",info:"To do"};
+  $("attn").innerHTML=it.length?`<h3><span>Needs attention</span><span class="note" style="text-transform:none;letter-spacing:0">${it.length} item${it.length>1?"s":""}</span></h3>`+it.map(([c,t,tab,sec])=>`<div class="ai ${c}"><span class="sv">${lab[c]}</span><span class="tx">${esc(t)}</span><button type="button" data-tab="${tab}" data-sec="${sec}">Go</button></div>`).join(""):`<div class="attn-ok">No alerts for this patient.</div>`;
+}
+$("attn").addEventListener("click",e=>{const b=e.target.closest("button[data-tab]");if(b)goTo(b.dataset.tab,b.dataset.sec)});
+const TICKS={"s-pt":()=>[!!($("name").value.trim()||$("rn").value.trim()),!!$("age").value,!!radio("gender")],
+  "s-risk":null,
+  "s-inv":()=>[!!$("aHct").value,!!$("aPlt").value],
+  "s-hx":()=>[!!$("feverOnset").value],
+  "s-sev":()=>[!!radio("sevA"),!!radio("sevB"),!!radio("sevC"),!!radio("sevD")],
+  "s-exam":()=>[!!$("wt").value,!!$("ht").value,!!$("sbp").value,!!$("dbp").value,!!$("pr").value,...CCVTR.map(([k])=>radio(k)!==null)],
+  "s-dx":()=>[!!radio("phase"),!!radio("cls")],
+  "s-io":()=>[!!$("ioIn").value,!!$("ioOut").value],
+  "s-mx":()=>[!!$("mx1").value.trim(),!!$("mx3").value.trim()]};
+function updateTicks(){let done=0,tot=0;
+  for(const [id,f] of Object.entries(TICKS)){const el=$("tk-"+id);
+    if(!f){const any=L.risk.some(([v])=>chk("risk_"+v))||$("riskOther").value.trim();el.className="tk "+(any?"done":"opt");el.parentNode.title=any?"Recorded":"Optional: tick any risk factors";continue}
+    const a=f(),n=a.filter(Boolean).length;tot++;if(n===a.length)done++;
+    el.className="tk "+(n===a.length?"done":n?"part":"");el.parentNode.title=`${n} of ${a.length} key fields filled`}
+  $("idxProg").textContent=`${done} of ${tot} sections complete`}
+function labFlags(){const g=radio("gender");
+  const R={Hb:g==="f"?[12,15]:[13,17],WCC:[4,11],PLT:[150,400],na:[135,145],k:[3.5,5.1],urea:[2.5,7.8],creat:g==="f"?[44,80]:[62,106],ast:[0,40],alt:[0,40],alb:[35,50],tbil:[0,21],ph:[7.35,7.45],hco3:[22,28],be:[-2,2],lact:[0,2],ck:[0,190],inr:[0,1.2],aptt:[25,38]};
+  const M={bHb:"Hb",aHb:"Hb",bWcc:"WCC",aWcc:"WCC",bPlt:"PLT",aPlt:"PLT",na:"na",k:"k",urea:"urea",creat:"creat",ast:"ast",alt:"alt",alb:"alb",tbil:"tbil",ph:"ph",hco3:"hco3",be:"be",lact:"lact",ck:"ck",inr:"inr",aptt:"aptt",rPh:"ph",rHco3:"hco3",rBe:"be",rLact:"lact"};
+  const SPECIAL=new Set(["aPlt","ast","alt"]);
+  for(const [id,key] of Object.entries(M)){const el=$("fl_"+id),inp=$(id);if(!el||!inp)continue;
+    if(SPECIAL.has(id)&&el.textContent)continue;
+    const x=nz(inp.value),[lo,hi]=R[key];el.title=`Reference ${lo}–${hi}`;
+    if(x==null){el.textContent="";continue}
+    if(x>hi){el.textContent="↑ high";el.className="flag hi"}else if(x<lo){el.textContent="↓ low";el.className="flag lo"}else el.textContent=""}}
+
+/* ---------- print layout ---------- */
+function buildPrint(secs){const v=id=>$(id).value.trim();const g=radio("gender");
+  const box=[["Name",v("name")],["Age / gender",[v("age")&&v("age")+" y",g&&lbl("gender",g)].filter(Boolean).join(", ")],["IC",v("ic")],["RN",v("rn")],["Bed / ward",v("bed")],["Date & time clerked",prettyDT(v("clerkDT"))]];
+  const tbl=document.querySelector("#revTrend table");
+  $("printView").innerHTML=`<div class="pv-h"><div><b>INPATIENT DENGUE ASSESSMENT AND CLERKING</b><span>Appendix 9 · CPG Management of Dengue in Adults (4th edition)</span></div><span>Printed ${esc(prettyDT(nowLocal()))}</span></div>
+  <table class="pv-box"><tr>${box.map(([k,x])=>`<td><small>${k}</small>${esc(x)||"&nbsp;"}</td>`).join("")}</tr></table>
+  ${secs.slice(1).map(([t,ls])=>`<div class="pv-s"><h2>${esc(t)}</h2>${ls.map(l=>`<p>${esc(l)}</p>`).join("")}</div>`).join("")}
+  ${tbl&&reviews.length?`<div class="pv-s"><h2>Review trend</h2>${tbl.outerHTML}</div>`:""}
+  <div class="pv-sign"><div>Clerked by: ${esc(v("by"))||"________________________"}</div><div>Signature / stamp: ________________________</div></div>
+  <div class="pv-f">Generated from the Dengue Clerking Sheet app. Suggestions are aids; the clinician confirms every classification.</div>`}
+
+/* ---------- tabs ---------- */
+const TABS=["patients","clerking","reviews","fluids","guide","note"];let curTab="clerking";
+function showTab(t,keepScroll){if(!TABS.includes(t))t="clerking";curTab=t;
+  document.querySelectorAll("main section.sh[data-tab]").forEach(x=>x.hidden=x.dataset.tab!==t);
+  document.querySelectorAll("#tabs button").forEach(b=>{if(b.dataset.tab===t)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  $("idx").hidden=t!=="clerking";document.querySelector(".shell").classList.toggle("noidx",t!=="clerking");
+  $("attn").hidden=(t==="patients"||t==="guide");
+  if(t==="patients")renderPatients();
+  if(!keepScroll)scrollTo({top:0})}
+function goTab(t){if(location.hash!=="#"+t){location.hash=t}else showTab(t)}
+function goTo(t,sec){goTab(t);setTimeout(()=>{showTab(t,true);const el=$(sec);if(el)el.scrollIntoView({block:"start"})},40)}
+addEventListener("hashchange",()=>{const t=location.hash.slice(1);if(TABS.includes(t))showTab(t)});
+$("tabs").addEventListener("click",e=>{const b=e.target.closest("button[data-tab]");if(b)goTab(b.dataset.tab)});
+$("idx").addEventListener("click",e=>{const b=e.target.closest("button[data-go]");if(b)$(b.dataset.go).scrollIntoView({block:"start"})});
+const hdr=document.querySelector("header.top");const setH=()=>document.documentElement.style.setProperty("--hdr",hdr.offsetHeight+"px");setH();
+try{new ResizeObserver(setH).observe(hdr)}catch(_){addEventListener("resize",setH)}
+
+/* ---------- patients & persistence (this browser only) ---------- */
+const KEY1="dengue-clerk-v1",KEY="dengue-clerk-v2";
+const TOP=(()=>{try{return window.self===window.top}catch(_){return false}})();
+document.querySelectorAll(".toponly").forEach(e=>e.hidden=!TOP);
+let store={current:null,patients:{}},ptDel=null,isExample=false;
+const fields=()=>[...document.querySelectorAll("main input,main select,main textarea")].filter(e=>e.id&&e.type!=="file"&&!e.closest("[data-nosave]"));
+function collect(){const d={};fields().forEach(e=>{d[e.id]=(e.type==="checkbox"||e.type==="radio")?e.checked:e.value});d._reviews=reviews;if(isExample)d._example=true;return d}
 function load(d){reviews=Array.isArray(d._reviews)?d._reviews:[];editIdx=null;delPending=null;fields().forEach(e=>{if(!(e.id in d)){if(e.type==="checkbox"||e.type==="radio")e.checked=false;else e.value="";return}
   if(e.type==="checkbox"||e.type==="radio")e.checked=!!d[e.id];else e.value=d[e.id]})}
+function snapFromData(d){d=d||{};return{name:d.name||"",rn:d.rn||"",bed:d.bed||"",age:d.age||"",g:d.gender_m?"m":d.gender_f?"f":null,nrev:(d._reviews||[]).length,ex:!!d._example}}
+function snapshot(){const v=id=>$(id).value.trim();const rs=sortedReviews();const ls=rs[rs.length-1];
+  return{name:v("name"),rn:v("rn"),bed:v("bed"),age:v("age"),g:radio("gender"),day:lastR.day||null,
+    cls:radio("cls")?({dnws:"DNWS",dwws:"DWWS",sd:"SD"}[radio("cls")]):"",
+    shock:currentShock(),next:(ls&&ls.next)||"",nrev:reviews.length,crit:attnState.crit,warn:attnState.warn,info:attnState.info,ex:isExample}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(_){}}
+function save(){if(!store.current)return;store.patients[store.current]={data:collect(),snap:snapshot(),updated:Date.now()};persist();
+  $("ptCount").textContent=Object.keys(store.patients).length;
+  const s=store.patients[store.current].snap;$("abWho").textContent=[s.bed,s.name||s.rn||"Unnamed patient"].filter(Boolean).join(" · ");
+  if(curTab==="patients")renderPatients()}
+const newId=()=>"p"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 function nowLocal(offsetMin=0){const d=new Date(Date.now()+offsetMin*6e4);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)}
 function daysAgo(n){return nowLocal(-n*1440).slice(0,10)}
 
-const EXAMPLE=()=>({_example:true,clerkDT:nowLocal(),name:"Example Patient",age:"42",gender_m:true,ic:"",rn:"EX-0001",admit_etd:true,vacc_n:true,
+const EXAMPLE=()=>({_example:true,clerkDT:nowLocal(),name:"Example Patient",bed:"Bed 12",age:"42",gender_m:true,ic:"",rn:"EX-0001",admit_etd:true,vacc_n:true,
   meds:"Metformin 500 mg BD (last dose this morning)\nAmlodipine 5 mg OD (last dose yesterday)",
   risk_obesity:true,risk_dm:true,risk_hpt:true,
   ns1:"Positive",igm:"Negative",dxDate:daysAgo(2),bDate:daysAgo(2),bHb:"14.8",bWcc:"4.1",bHct:"43",bPlt:"142",
@@ -916,24 +1314,75 @@ const EXAMPLE=()=>({_example:true,clerkDT:nowLocal(),name:"Example Patient",age:
    {dt:nowLocal(300),sbp:"118",dbp:"80",pr:"92",rr:"18",spo2:"99",temp:"37.0",dxt:"6.8",ecg:"Sinus rhythm 92/min",perf:{cC:"0",cR:"0",cT:"0",cV:"0",cRate:"0"},hct:"43",plt:"49",ph:"7.38",hco3:"22",be:"-2",lact:"1.6",ioIn:"3400",ioOut:"1500",uoMl:"190",uoHrs:"3",notes:"Warm peripheries, CRT <3 s, passing urine well",phase:"critical",cls:"dwws",shock:"n",shockSub:null,plan:"Continue step-down; HCT 4-hourly; watch for fluid overload",next:nowLocal(540),by:""}]});
 
 function fresh(){return{clerkDT:nowLocal(),byDT:nowLocal(),sumMode_all:true}}
-let isExample=false;
 function apply(d){isExample=!!d._example;load(d);if(!$("rDT").value)$("rDT").value=nowLocal();$("revFormTitle").textContent=`Add review ${reviews.length+1}`;$("btnRevSave").textContent="Save review";$("btnRevCancel").hidden=true;$("exBanner").hidden=!isExample;calc();}
+function switchTo(id){if(store.current&&store.patients[store.current])save();store.current=id;apply(store.patients[id].data);save()}
+function addPatient(data){const id=newId();store.patients[id]={data,snap:null,updated:Date.now()};switchTo(id);return id}
+function deletePatient(id){const rec=store.patients[id];delete store.patients[id];ptDel=null;
+  if(store.current===id){store.current=null;const ids=Object.keys(store.patients);if(ids.length)switchTo(ids[0]);else addPatient(fresh())}
+  persist();save();renderPatients();
+  toast("Patient deleted","Undo",()=>{store.patients[id]=rec;persist();save();renderPatients();toast("Patient restored")})}
+function renderPatients(){
+  const ids=Object.keys(store.patients);
+  const sn=id=>store.patients[id].snap||snapFromData(store.patients[id].data);
+  ids.sort((a,b)=>{const x=sn(a),y=sn(b);if(!x.bed!==!y.bed)return x.bed?-1:1;return(x.bed||"").localeCompare(y.bed||"",undefined,{numeric:true})||(x.name||"").localeCompare(y.name||"")});
+  $("ptCount").textContent=ids.length;
+  $("ptList").innerHTML=ids.length?ids.map(id=>{const s=sn(id),p=store.patients[id],cur=id===store.current;
+    const st=s.shock?`<span class="st crit">${s.shock==="decomp"?"Decompensated":"Compensated"} shock</span>`:s.crit?`<span class="st crit">${s.crit} urgent</span>`:s.warn?`<span class="st warn">${s.warn} to check</span>`:s.info?`<span class="st">Details incomplete</span>`:(s.crit===0?`<span class="st ok">No alerts</span>`:"");
+    const od=s.next&&new Date(s.next)<new Date();
+    return`<div class="pt ${cur?"cur":""}"><button type="button" class="ptmain" data-open="${id}" aria-label="Open ${esc(s.name||"patient")}">
+      <span class="ptbed">${esc(s.bed)||"—"}</span>
+      <span class="ptname"><b>${esc(s.name)||"Unnamed patient"}${s.ex?" (example)":""}</b><small>${[s.rn&&"RN "+esc(s.rn),s.age&&esc(s.age)+" y",s.g&&(s.g==="m"?"M":"F")].filter(Boolean).join(" · ")||"No details yet"}</small></span>
+      <span>${st}</span>
+      <span class="ptmeta">${s.day?`<span class="chip on">Day ${s.day}</span>`:""}${s.cls?`<span class="chip ${/SD/.test(s.cls)?"crit":/DWWS/.test(s.cls)?"warn":"on"}">${s.cls}</span>`:""}${s.nrev?`<span class="chip">${s.nrev} review${s.nrev>1?"s":""}</span>`:""}${s.next?`<span class="chip ${od?"warn":""}">Next ${fmtShort(s.next)}</span>`:""}${p.updated?`<span class="chip">Updated ${fmtShort(new Date(p.updated-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,16))}</span>`:""}</span>
+    </button><div class="ptacts">${cur?`<span class="note">Open now</span>`:""}${TOP?`<button type="button" data-save="${id}">Save file</button>`:""}
+      ${ptDel===id?`<span class="confirm">Delete this patient? <button type="button" class="danger" data-delyes="${id}">Delete</button><button type="button" data-delno="1">Keep</button></span>`:`<button type="button" data-del="${id}">Delete</button>`}</div></div>`}).join(""):`<div class="ptempty">No patients on this PC yet.</div>`}
+$("ptList").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.open){if(b.dataset.open!==store.current){switchTo(b.dataset.open);toast("Patient opened")}goTab("clerking")}
+  else if(b.dataset.del){ptDel=b.dataset.del;renderPatients()}
+  else if(b.dataset.delno){ptDel=null;renderPatients()}
+  else if(b.dataset.delyes)deletePatient(b.dataset.delyes)
+  else if(b.dataset.save)savePatientFile(b.dataset.save)});
+$("btnNewPt").onclick=()=>{addPatient(fresh());goTab("clerking");toast("New patient added")};
+$("btnExample").onclick=()=>{addPatient(EXAMPLE());goTab("clerking");toast("Example patient added")};
 
-let saved=null; try{saved=JSON.parse(localStorage.getItem(KEY)||"null")}catch(_){}
-apply(saved&&Object.keys(saved).length?saved:EXAMPLE());
+/* ---------- patient files ---------- */
+function download(obj,name){try{const blob=new Blob([JSON.stringify(obj,null,1)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);toast("File saved to Downloads")}catch(_){toast("Saving files is not available here")}}
+const stamp=()=>nowLocal().replace(/[-:T]/g,"").slice(0,12);
+function savePatientFile(id){if(id===store.current)save();const p=store.patients[id],s=p.snap||snapFromData(p.data);
+  download({format:"dengue-clerk-patient",version:2,exported:new Date().toISOString(),data:p.data},`dengue_${(s.rn||s.name||"patient").replace(/[^\w-]+/g,"_")}_${stamp()}.json`)}
+$("btnSaveAll").onclick=()=>{save();download({format:"dengue-clerk-bundle",version:2,exported:new Date().toISOString(),patients:Object.values(store.patients).map(p=>p.data)},`dengue_all_patients_${stamp()}.json`)};
+$("fileOpen").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const rd=new FileReader();
+  rd.onload=()=>{let o;try{o=JSON.parse(rd.result)}catch(_){toast("This file could not be read. Choose a patient file saved from this app.");return}
+    const list=o&&o.format==="dengue-clerk-bundle"?o.patients:o&&o.format==="dengue-clerk-patient"?[o.data]:null;
+    if(!Array.isArray(list)||!list.length||typeof list[0]!=="object"){toast("This is not a patient file from this app.");return}
+    save();let added=0,updated=0,lastId=null;
+    list.forEach(d=>{delete d._example;const match=Object.keys(store.patients).find(id=>{const x=store.patients[id].data||{};return d.rn&&x.rn===d.rn&&(x.name||"")===(d.name||"")});
+      if(match){store.patients[match]={data:d,snap:null,updated:Date.now()};updated++;lastId=match}else{const id=newId();store.patients[id]={data:d,snap:null,updated:Date.now()};added++;lastId=id}});
+    if(list.length===1)switchTo(lastId);else if(store.patients[store.current])apply(store.patients[store.current].data);
+    persist();save();renderPatients();toast(`${added?added+" added":""}${added&&updated?", ":""}${updated?updated+" updated":""}`)};
+  rd.readAsText(f);e.target.value=""});
 
-document.querySelector("main").addEventListener("input",()=>{if(isExample){isExample=false;$("exBanner").hidden=true}calc();save()});
-document.querySelector("main").addEventListener("change",()=>{calc();save()});
+/* ---------- start ---------- */
+(function init(){let raw=null;try{raw=JSON.parse(localStorage.getItem(KEY)||"null")}catch(_){}
+  if(raw&&raw.patients&&Object.keys(raw.patients).length){store=raw;if(!store.patients[store.current])store.current=Object.keys(store.patients)[0];apply(store.patients[store.current].data);save()}
+  else{let old=null;try{old=JSON.parse(localStorage.getItem(KEY1)||"null")}catch(_){}
+    const id=newId();store={current:id,patients:{[id]:{data:(old&&Object.keys(old).length)?old:EXAMPLE(),snap:null}}};apply(store.patients[id].data);save()}
+  document.querySelectorAll('input[type=number]').forEach(e=>{if(!/^(r?[bB]e)$/.test(e.id))e.inputMode="decimal"});
+  const t=location.hash.slice(1);showTab(TABS.includes(t)?t:"clerking",true)})();
 
-$("btnNew").onclick=()=>{$("confirmBox").hidden=false;$("btnNew").hidden=true};
-$("btnNo").onclick=()=>{$("confirmBox").hidden=true;$("btnNew").hidden=false};
-$("btnYes").onclick=()=>{apply(fresh());try{localStorage.removeItem(KEY)}catch(_){}save();$("confirmBox").hidden=true;$("btnNew").hidden=false;toast("Form cleared");scrollTo({top:0})};
-$("btnExample").onclick=()=>{apply(EXAMPLE());save();toast("Example patient loaded")};
+document.querySelector("main").addEventListener("input",e=>{if(e.target.closest("[data-nosave]"))return;if(isExample){isExample=false;$("exBanner").hidden=true}calc();save()});
+document.querySelector("main").addEventListener("change",e=>{if(e.target.closest("[data-nosave]"))return;calc();save()});
 
-function toast(t){const e=$("toast");e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,1800)}
-$("btnCopy").onclick=()=>{const t=$("summary").textContent;
-  const fallback=()=>{const s=getSelection(),r=document.createRange();r.selectNodeContents($("summary"));s.removeAllRanges();s.addRange(r);toast("Note selected — press Ctrl/⌘+C")};
-  try{navigator.clipboard.writeText(t).then(()=>toast("Note copied"),fallback)}catch(_){fallback()}};
+function toast(t,act,fn){const e=$("toast");$("toastMsg").textContent=t;const b=$("toastAct");
+  if(act){b.textContent=act;b.hidden=false;b.onclick=()=>{e.hidden=true;fn()}}else{b.hidden=true;b.onclick=null}
+  e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,act?7000:1800)}
+function copyNote(){const t=$("summary").textContent;
+  const fallback=()=>{goTab("note");setTimeout(()=>{const s=getSelection(),r=document.createRange();r.selectNodeContents($("summary"));s.removeAllRanges();s.addRange(r);toast("Note selected — press Ctrl/⌘+C")},60)};
+  try{navigator.clipboard.writeText(t).then(()=>toast("Note copied"),fallback)}catch(_){fallback()}}
+$("btnCopy").onclick=copyNote;$("abCopy").onclick=copyNote;
+$("abReview").onclick=()=>{goTo("reviews","revForm");setTimeout(()=>$("rSbp").focus({preventScroll:true}),120)};
+$("abPrint").onclick=()=>{calc();window.print()};
+$("abSave").onclick=()=>savePatientFile(store.current);
 </script>
 
 </body>
