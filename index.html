@@ -290,6 +290,27 @@ nav.idx button.go:hover{background:var(--hs);color:var(--hi)}
 #abReview{background:var(--c-violet);border-color:var(--c-violet);color:#fff}
 #abCopy{border-color:var(--c-slate);color:var(--i-slate)}
 .actbar{border-top:3px solid var(--band-2)}
+
+/* ---------- UX upgrade ---------- */
+input.implausible{border-color:var(--crit)!important;background:var(--crit-soft)!important}
+.pmsg{font-size:12px;color:var(--crit);font-weight:700}
+.dripset{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:flex-end}
+.dripset .f{flex:0 1 260px}
+.st-lbl{margin-left:auto;font-size:11px;font-family:var(--f-mono);color:var(--muted);white-space:nowrap}
+.st-lbl.done{color:var(--ok)}.st-lbl.part{color:var(--warn)}
+@media (max-width:860px){.st-lbl{display:none}}
+.checklist{display:flex;flex-direction:column;gap:8px}
+.ck{border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+.ck-h{display:flex;align-items:center;gap:10px;padding:7px 12px;background:var(--bg);border-bottom:1px solid var(--line)}
+.ck-h b{flex:1;font-family:var(--f-display);font-size:15px;letter-spacing:.04em;text-transform:uppercase}
+.ck-h button{padding:3px 10px;font-size:13px}
+.ck-b{padding:8px 12px;font-size:14px;display:flex;flex-direction:column;gap:2px;white-space:pre-wrap;overflow-wrap:anywhere}
+.ck.missing .ck-h{background:var(--warn-soft)}.ck.missing .ck-b{color:var(--warn);font-style:italic}
+details.plain>summary{cursor:pointer;font-weight:700;padding:6px 0;color:var(--hi,var(--ink))}
+.sortrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.sortrow select{width:auto;min-width:0}
+.saved{font-size:12px;color:var(--ok);white-space:nowrap}
+.due-od{color:var(--crit);font-weight:700}
 footer{font-size:12px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 html{scroll-behavior:smooth}
@@ -338,6 +359,7 @@ html{scroll-behavior:smooth}
     <label class="filebtn"><input type="file" id="fileOpen" accept=".json,application/json"><span>Open patient file</span></label>
     <button type="button" id="btnSaveAll" class="toponly" hidden>Save all to file</button>
   </div>
+  <div class="sortrow"><label for="ptSort">Sort by</label><select id="ptSort"><option value="bed">Bed</option><option value="urgent">Most urgent first</option><option value="next">Next review due</option></select></div>
   <div id="ptList" class="ptlist"></div>
   <div class="note">Patients are stored only in this browser on this PC. Use <b>Save patient file</b> to move a patient to another PC at handover. Patient files contain identifiable details: keep them on MOH devices and delete them once opened on the new PC.</div>
 </div></section>
@@ -513,6 +535,11 @@ html{scroll-behavior:smooth}
   <div class="hint" id="fxQuotaHint"></div>
 
   <h3>Fluid regime</h3>
+  <div class="dripset">
+    <label class="f"><span>Giving set <em>for drip rate</em></span><select id="fxDrop">
+      <option value="20">Standard set · 20 drops/ml</option><option value="15">Blood / 15 drops/ml</option><option value="60">Micro-drip · 60 drops/ml</option><option value="0">Infusion pump (ml/hr only)</option></select></label>
+    <span class="note">Drops per minute = ml/hr × drops per ml ÷ 60, rounded to whole drops.</span>
+  </div>
   <div class="opts" id="fxAlg"></div>
   <div class="hint" id="fxSug"></div>
   <div id="fxTable"></div>
@@ -782,16 +809,18 @@ html{scroll-behavior:smooth}
 </div></section>
 
 <!-- SUMMARY -->
-<section class="sh" id="s-sum" data-hue="slate" data-tab="note"><h2>Summary note</h2><div class="body">
+<section class="sh" id="s-sum" data-hue="slate" data-tab="note"><h2>Check and copy note</h2><div class="body">
+  <div class="note">Check each section below. Use <b>Change</b> to fix anything, then copy the note or download the PDF.</div>
   <div class="row" style="align-items:center"><button type="button" class="primary" id="btnCopy">Copy note</button><button type="button" id="btnPdf" class="toponly" hidden>Download PDF summary</button><div class="f"><span>Reviews in note</span><div class="opts" id="sumMode"></div></div><span class="note">Paste into the case notes or HIS. Only filled fields are included.</span></div>
-  <pre id="summary" tabindex="0"></pre>
+  <div class="checklist" id="checkList"></div>
+  <details class="plain"><summary>Plain-text note (this is what Copy note copies)</summary><pre id="summary" tabindex="0"></pre></details>
 </div></section>
 
 <footer>Based on Appendix 9, Management of Dengue in Adults (Fourth Edition), CPG Malaysia. Hypotension is taken as SBP &lt;100 mmHg, MAP &lt;65 mmHg, or a fall in SBP of more than 40 mmHg from baseline. Suggestions in this app are aids; the clinician confirms every classification. Entries are saved only in this browser on this device unless you save a patient file.<br>For suggestions for improvement, please email <a href="mailto:msani.mr@moh.gov.my" style="color:var(--accent)">msani.mr@moh.gov.my</a>.</footer>
 </main>
 </div></div>
 <div class="actbar" id="actbar"><div class="wrap actin">
-  <span class="who" id="abWho"></span>
+  <span class="who" id="abWho"></span><span class="saved" id="abSaved"></span>
   <button type="button" class="primary" id="abReview">Add review</button>
   <button type="button" id="abCopy">Copy note</button>
   <button type="button" id="abSave" class="toponly" hidden>Save patient file</button>
@@ -973,7 +1002,7 @@ function calc(){
   if(r.bal!=null)chips.push(`<span class="chip">I/O ${r.bal>0?"+":""}${r.bal}</span>`);
   if(reviews.length){const last=sortedReviews().pop();const st=statusOf(last);
     chips.push(`<span class="chip on">${reviews.length} review${reviews.length>1?"s":""} · last ${fmtShort(last.dt)}</span>`);
-    if(last.next)chips.push(`<span class="chip ${new Date(last.next)<new Date()?"warn":""}">Next ${fmtShort(last.next)}</span>`);}
+    if(last.next)chips.push(`<span class="chip ${new Date(last.next)<new Date()?"crit":""}">Next review ${fmtShort(last.next)} · ${dueText(last.next)}</span>`);}
   $("chips").innerHTML=chips.join("");
 
   lastR=r;
@@ -1086,6 +1115,7 @@ function statusOf(o){const bS=nz($("bSbp").value);const a=bpAssess(nz(o.sbp),nz(
 function sortedReviews(){return reviews.map((r,i)=>({...r,_i:i})).sort((x,y)=>(x.dt||"").localeCompare(y.dt||""))}
 function uoRate(o){const ml=nz(o.uoMl),h=nz(o.uoHrs),w=lastR.dosingWt;return(ml!=null&&h&&w)?ml/h/w:null}
 function delta(cur,prev){if(cur==null||prev==null)return"";const d=cur-prev;return(d>0?"+":"")+fmt(Math.round(d*10)/10)}
+function dueText(dt){if(!dt)return"";const m=Math.round((new Date(dt)-Date.now())/6e4);const a=Math.abs(m);const t=a<60?`${a} min`:`${Math.floor(a/60)} h${a%60?" "+a%60+" min":""}`;return m<0?`overdue ${t}`:m===0?"due now":`in ${t}`}
 function fmtShort(dt){if(!dt)return"—";const d=new Date(dt);if(isNaN(d))return dt;return d.toLocaleString("en-GB",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"})}
 
 function chart(rows,key,title,color,unit){const pts=rows.map((r,i)=>({i,v:nz(r[key]),l:r.adm?"Adm":"R"+r.n})).filter(p=>p.v!=null);if(pts.length<2)return"";
@@ -1097,6 +1127,18 @@ function chart(rows,key,title,color,unit){const pts=rows.map((r,i)=>({i,v:nz(r[k
   const dots=pts.map((p,k)=>`<circle cx="${X(k).toFixed(1)}" cy="${Y(p.v).toFixed(1)}" r="${k===pts.length-1?4.5:3}" fill="${k===pts.length-1?color:"var(--surface)"}" stroke="${color}" stroke-width="2"/><text x="${X(k).toFixed(1)}" y="${H-8}" text-anchor="middle">${p.l}</text>`).join("");
   return`<div class="chartbox"><h4>${title} <span style="text-transform:none">· ${unit}</span></h4><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${title} trend">${g}<polyline points="${line}" fill="none" stroke="${color}" stroke-width="2"/>${dots}</svg></div>`}
 
+function vitalsChart(rows){const pts=rows.map(r=>({l:r.adm?"Adm":"R"+r.n,s:nz(r.sbp),d:nz(r.dbp),p:nz(r.pr)})).filter(x=>x.s!=null||x.p!=null);if(pts.length<2)return"";
+  const W=320,H=170,L=34,R=12,T=14,B=26;const vals=pts.flatMap(x=>[x.s,x.d,x.p]).filter(v=>v!=null);let mn=Math.min(40,...vals)-5,mx=Math.max(...vals)+10;
+  const X=k=>L+(k/(pts.length-1))*(W-L-R),Y=v=>T+(1-(v-mn)/(mx-mn))*(H-T-B);
+  const ticks=[60,100,140,180].filter(t=>t>mn&&t<mx);
+  let g=ticks.map(t=>`<line class="grid-l" x1="${L}" x2="${W-R}" y1="${Y(t).toFixed(1)}" y2="${Y(t).toFixed(1)}"/><text x="${L-5}" y="${(Y(t)+4).toFixed(1)}" text-anchor="end">${t}</text>`).join("");
+  g+=`<rect x="${L}" y="${Y(65).toFixed(1)}" width="${W-L-R}" height="${(Y(mn)-Y(65)).toFixed(1)}" fill="var(--crit-soft)" opacity=".7"/>`;
+  g+=`<line x1="${L}" x2="${W-R}" y1="${Y(100).toFixed(1)}" y2="${Y(100).toFixed(1)}" stroke="var(--warn)" stroke-dasharray="4 3"/>`;
+  const bars=pts.map((x,k)=>x.s!=null&&x.d!=null?`<line x1="${X(k).toFixed(1)}" x2="${X(k).toFixed(1)}" y1="${Y(x.s).toFixed(1)}" y2="${Y(x.d).toFixed(1)}" stroke="var(--c-blue)" stroke-width="5" stroke-linecap="round"/><circle cx="${X(k).toFixed(1)}" cy="${Y(Math.round(x.d+(x.s-x.d)/3)).toFixed(1)}" r="3" fill="var(--surface)" stroke="var(--c-blue)" stroke-width="2"/>`:"").join("");
+  const pp=pts.map((x,k)=>x.p!=null?`${X(k).toFixed(1)},${Y(x.p).toFixed(1)}`:null).filter(Boolean).join(" ");
+  const pd=pts.map((x,k)=>x.p!=null?`<circle cx="${X(k).toFixed(1)}" cy="${Y(x.p).toFixed(1)}" r="3" fill="var(--c-orange)"/>`:"").join("");
+  const lb=pts.map((x,k)=>`<text x="${X(k).toFixed(1)}" y="${H-8}" text-anchor="middle">${x.l}</text>`).join("");
+  return`<div class="chartbox"><h4>Vital signs <span style="text-transform:none">· <span style="color:var(--c-blue)">BP bar, MAP ○</span> · <span style="color:var(--c-orange)">PR ●</span></span></h4><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Blood pressure and pulse trend">${g}<polyline points="${pp}" fill="none" stroke="var(--c-orange)" stroke-width="2"/>${bars}${pd}${lb}<text x="${W-R}" y="${(Y(65)-3).toFixed(1)}" text-anchor="end" style="fill:var(--crit)">MAP &lt;65</text><text x="${W-R}" y="${(Y(100)-3).toFixed(1)}" text-anchor="end" style="fill:var(--warn)">SBP 100</text></svg></div>`}
 function renderReviews(){
   const rs=sortedReviews();rs.forEach((r,k)=>r.n=k+1);
   const rows=[admissionRow(),...rs];
@@ -1115,7 +1157,7 @@ function renderReviews(){
       <td class="n">${bal!=null?(bal>0?"+":"")+bal:"—"}</td>
       <td>${st.t!=="—"?`<span class="st ${st.c}">${st.t}</span>`:"—"}</td></tr>`}).join("");
     $("revTrend").innerHTML=`<div class="trendwrap"><div class="tscroll"><table class="trend"><thead><tr><th></th><th>Time</th><th>Day</th><th>BP</th><th>MAP</th><th>PR</th><th>DXT</th><th>HCT %</th><th>PLT</th><th>Lact</th><th>BE</th><th>UO ml/kg/h</th><th>Balance</th><th>Status</th></tr></thead><tbody>${tr}</tbody></table></div>
-      <div class="charts">${chart(rows,"hct","HCT","var(--crit)","%")}${chart(rows,"plt","Platelets","var(--accent)","×10⁹/L")}</div></div>`;
+      <div class="charts">${vitalsChart(rows)}${chart(rows,"hct","HCT","var(--crit)","%")}${chart(rows,"plt","Platelets","var(--accent)","×10⁹/L")}</div></div>`;
   } else $("revTrend").innerHTML=`<div class="hint">No reviews yet. Record each bedside review below; the trend table and HCT/platelet charts appear here once the first review is saved.</div>`;
   // list
   $("revList").innerHTML=rs.slice().reverse().map(r=>{const st=statusOf(r);const d=dayOf(r.dt);
@@ -1213,11 +1255,15 @@ function fxRows(alg,w,cap,maint){
     ["HCT drop ≥20%","Packed red cells 5–10 ml/kg",vol(5,10,w),"Suspect significant bleeding; blood components as needed"]],
     foot:`Volumes use ${fmt(w)} kg (${lastR.fluidSrc}). HCT 2–4 hourly or more often. Consider stopping IV fluid at 48 hours of plasma leakage.`}}
 let fxCurrent=null,fxState={};
+const dropF=()=>{const e=$("fxDrop");return e?+e.value:0};
+const drops=ml=>Math.round(ml*dropF()/60);
+function dropTxt(r){if(/^Oral/.test(r[2]))return"—";if(!/ml\/hr/.test(r[2]))return"—";
+  return r[2].replace(/([\d.]+)(–([\d.]+))? ml\/hr/g,(m,a,_,b)=>`${drops(+a)}${b?"–"+drops(+b):""} drops/min`)}
 function renderFluid(){
   const w=lastR.dosingWt||null, cap=w?Math.min(w,70):null, maint=cap?maintRate(cap):null;
   $("fxW").textContent=w?`${fmt(w)} kg · ${lastR.fluidSrc}`:"Enter weight & height";
   $("fxCap").textContent=cap?`${fmt(cap)} kg${w>70?" (capped)":""}`:"—";
-  $("fxMaint").textContent=maint?`${fmtN(maint)} ml/hr`:"—";
+  $("fxMaint").textContent=maint?`${fmtN(maint)} ml/hr${dropF()?" · "+drops(maint)+" drops/min":""}`:"—";
   $("fxMaintDay").textContent=maint?`${fmtN(maint*24)} ml`:"—";
   const qo=cap?quotaOf(cap):null,quota=qo?qo.q:null;
   $("fxQuota").textContent=quota?`${fmtN(quota)} ml · ${qo.tab?"CPG table":"calculated"}`:"—";
@@ -1244,14 +1290,27 @@ function renderFluid(){
   $("fxSug").innerHTML=`Suggested from current status: <b>${{alg1:"Algorithm 1 (no shock)",alg2:"Algorithm 2 (compensated shock)",alg3:"Algorithm 3 (decompensated shock)"}[sug]}</b>${radio("fxAlg")&&radio("fxAlg")!==sug?". You are viewing a different algorithm.":"."}`;
   if(!w){$("fxTable").innerHTML="";fxCurrent=null;return}
   const t=fxRows(alg,w,cap,maint);fxCurrent=t;
-  $("fxTable").innerHTML=`<h3 style="margin-bottom:8px">${t.title}</h3><div class="tscroll"><table class="trend fx"><thead><tr><th>Step</th><th>Dose</th><th>For this patient</th><th>Duration / notes</th></tr></thead><tbody>${t.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="n">${r[2]}</td><td>${r[3]}</td></tr>`).join("")}</tbody></table></div><div class="note" style="margin-top:6px">${t.foot}</div>`;
+  $("fxTable").innerHTML=`<h3 style="margin-bottom:8px">${t.title}</h3><div class="tscroll"><table class="trend fx"><thead><tr><th>Step</th><th>Dose</th><th>For this patient</th>${dropF()?"<th>Drip rate</th>":""}<th>Duration / notes</th></tr></thead><tbody>${t.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="n">${r[2]}</td>${dropF()?`<td class="n">${dropTxt(r)}</td>`:""}<td>${r[3]}</td></tr>`).join("")}</tbody></table></div><div class="note" style="margin-top:6px">${t.foot}</div>`;
 }
 $("btnFxCopy").onclick=()=>{if(!fxCurrent){toast("Enter weight and height first");return}
-  const txt=fxCurrent.title.split(" · ")[0]+` (${fmt(fxCurrent.wt)} kg): `+fxCurrent.rows.map(r=>`${r[0]} ${r[1]} = ${r[2]} (${r[3].split(" · ")[0]})`).join("; ");
+  const txt=fxCurrent.title.split(" · ")[0]+` (${fmt(fxCurrent.wt)} kg): `+fxCurrent.rows.map(r=>`${r[0]} ${r[1]} = ${r[2]}${dropF()&&dropTxt(r)!=="—"?" ["+dropTxt(r)+"]":""} (${r[3].split(" · ")[0]})`).join("; ")+(dropF()?` Giving set ${dropF()} drops/ml.`:"");
   const el=$("mx1");el.value=(el.value.trim()?el.value.trim()+"\n":"")+txt;calc();save();toast("Added to fluid plan")};
 
 $("btnGuideOpen").onclick=()=>document.querySelectorAll("#s-guide details").forEach(d=>d.open=true);
 $("btnGuideClose").onclick=()=>document.querySelectorAll("#s-guide details").forEach(d=>d.open=false);
+/* ---------- plausibility checks ---------- */
+const PLAUS={age:[12,110],wt:[25,250],ht:[120,220],bookWt:[25,250],sbp:[40,260],dbp:[20,160],pr:[20,250],bSbp:[60,260],bDbp:[30,160],rr:[4,70],spo2:[50,100],temp:[33,43],glu:[1,40],
+  bHb:[3,25],aHb:[3,25],bWcc:[0.1,100],aWcc:[0.1,100],bHct:[10,75],aHct:[10,75],bPlt:[1,1500],aPlt:[1,1500],na:[100,180],k:[1.5,9],urea:[0.5,60],creat:[20,2000],
+  ast:[1,30000],alt:[1,30000],alb:[10,60],tbil:[1,800],ph:[6.6,7.8],hco3:[2,45],be:[-30,15],lact:[0.1,25],ck:[5,300000],inr:[0.5,15],aptt:[10,200],
+  ioIn:[0,30000],ioOut:[0,30000],fxBase:[0,30000],rSbp:[40,260],rDbp:[20,160],rPr:[20,250],rRr:[4,70],rSpo2:[50,100],rTemp:[33,43],rDxt:[1,40],
+  rHct:[10,75],rPlt:[1,1500],rPh:[6.6,7.8],rHco3:[2,45],rBe:[-30,15],rLact:[0.1,25],rIn:[0,30000],rOut:[0,30000],rUoMl:[0,5000],rUoHrs:[0.25,24]};
+const PLABEL={sbp:"SBP",dbp:"DBP",pr:"PR",rr:"RR",spo2:"SpO₂",temp:"Temp",glu:"DXT",wt:"Weight",ht:"Height",age:"Age",aHct:"HCT",bHct:"Baseline HCT",aPlt:"PLT",rSbp:"Review SBP",rDbp:"Review DBP",rPr:"Review PR",rHct:"Review HCT",rPlt:"Review PLT",rTemp:"Review temp"};
+function checkPlaus(el){const r=PLAUS[el.id];if(!r)return false;const x=parseFloat(el.value);const bad=el.value!==""&&!isNaN(x)&&(x<r[0]||x>r[1]);
+  el.classList.toggle("implausible",bad);el.setAttribute("aria-invalid",bad?"true":"false");
+  const host=el.closest(".f");if(host){let m=host.querySelector(".pmsg");if(bad){if(!m){m=document.createElement("span");m.className="pmsg";host.appendChild(m)}m.textContent=`Check value: usual range ${r[0]}–${r[1]}`}else if(m)m.remove()}
+  return bad}
+function badFields(){return Object.keys(PLAUS).filter(id=>$(id)&&checkPlaus($(id)))}
+
 /* ---------- attention, ticks, lab flags ---------- */
 let attnState={crit:0,warn:0};
 function renderAttn(r){
@@ -1269,6 +1328,7 @@ function renderAttn(r){
   const bH=nz(v("bHct"));const hs=[{hct:v("aHct")},...rs].map(x=>nz(x.hct)).filter(x=>x!=null);const lH=hs.length?hs[hs.length-1]:null;
   if(bH&&lH!=null&&(lH-bH)/bH>=0.2)it.push(["warn",`HCT ${lH}% is ${fmt((lH-bH)/bH*100)}% above baseline (${bH}%).`,rs.length?"reviews":"clerking",rs.length?"s-rev":"s-inv"]);
   const age=nz(v("age"));if(age!=null&&age<18)it.push(["warn","Age under 18: this sheet is for adults. Use the paediatric dengue CPG.","clerking","s-pt"]);
+  const bad=badFields();if(bad.length)it.push(["warn",`Check entries that look implausible: ${bad.map(id=>PLABEL[id]||id).join(", ")}.`,["rSbp","rDbp","rPr","rHct","rPlt","rTemp"].some(x=>bad.includes(x))||/^r[A-Z]/.test(bad[0])?"reviews":"clerking",/^r[A-Z]/.test(bad[0])?"revForm":(["sbp","dbp","pr","rr","spo2","temp","glu","wt","ht","bSbp","bDbp"].includes(bad[0])?"s-exam":bad[0]==="age"?"s-pt":["ioIn","ioOut"].includes(bad[0])?"s-io":bad[0]==="fxBase"?"s-fluid":"s-inv")]);
   const miss=[[!v("wt"),"weight","s-exam"],[!v("ht"),"height","s-exam"],[!radio("gender"),"gender","s-pt"],[!v("feverOnset"),"date of fever onset","s-hx"]].filter(x=>x[0]);
   if(miss.length)it.push(["info",`Missing for calculations: ${miss.map(x=>x[1]).join(", ")}.`,"clerking",miss[0][2]]);
   attnState={crit:it.filter(x=>x[0]==="crit").length,warn:it.filter(x=>x[0]==="warn").length,info:it.filter(x=>x[0]==="info").length};
@@ -1286,11 +1346,12 @@ const TICKS={"s-pt":()=>[!!($("name").value.trim()||$("rn").value.trim()),!!$("a
   "s-dx":()=>[!!radio("phase"),!!radio("cls")],
   "s-io":()=>[!!$("ioIn").value,!!$("ioOut").value],
   "s-mx":()=>[!!$("mx1").value.trim(),!!$("mx3").value.trim()]};
+function stLbl(btn,st){let e=btn.querySelector(".st-lbl");if(!e){e=document.createElement("span");btn.appendChild(e)}e.className="st-lbl "+st;e.textContent={done:"Done",part:"In progress",none:"Not started",opt:"Optional"}[st]}
 function updateTicks(){let done=0,tot=0;
   for(const [id,f] of Object.entries(TICKS)){const el=$("tk-"+id);
-    if(!f){const any=L.risk.some(([v])=>chk("risk_"+v))||$("riskOther").value.trim();el.className="tk "+(any?"done":"opt");el.parentNode.title=any?"Recorded":"Optional: tick any risk factors";continue}
+    if(!f){const any=L.risk.some(([v])=>chk("risk_"+v))||$("riskOther").value.trim();el.className="tk "+(any?"done":"opt");el.parentNode.title=any?"Recorded":"Optional: tick any risk factors";stLbl(el.parentNode,any?"done":"opt");continue}
     const a=f(),n=a.filter(Boolean).length;tot++;if(n===a.length)done++;
-    el.className="tk "+(n===a.length?"done":n?"part":"");el.parentNode.title=`${n} of ${a.length} key fields filled`}
+    el.className="tk "+(n===a.length?"done":n?"part":"");el.parentNode.title=`${n} of ${a.length} key fields filled`;stLbl(el.parentNode,n===a.length?"done":n?"part":"none")}
   $("idxProg").textContent=`${done} of ${tot} sections complete`}
 function labFlags(){const g=radio("gender");
   const R={Hb:g==="f"?[12,15]:[13,17],WCC:[4,11],PLT:[150,400],na:[135,145],k:[3.5,5.1],urea:[2.5,7.8],creat:g==="f"?[44,80]:[62,106],ast:[0,40],alt:[0,40],alb:[35,50],tbil:[0,21],ph:[7.35,7.45],hco3:[22,28],be:[-2,2],lact:[0,2],ck:[0,190],inr:[0,1.2],aptt:[25,38]};
@@ -1304,7 +1365,12 @@ function labFlags(){const g=radio("gender");
 
 /* ---------- print layout ---------- */
 let lastSecs=[];
-function buildPrint(secs){lastSecs=secs;const v=id=>$(id).value.trim();const g=radio("gender");
+const CKMAP={"Inpatient dengue clerking":["clerking","s-pt"],"Risk factors":["clerking","s-risk"],"Current medications":["clerking","s-pt"],"Investigations":["clerking","s-inv"],"History of presenting illness":["clerking","s-hx"],"Illness severity":["clerking","s-sev"],"Examination":["clerking","s-exam"],"Diagnosis":["clerking","s-dx"],"Cumulative I/O":["clerking","s-io"],"Fluid calculation":["fluids","s-fluid"],"Management":["clerking","s-mx"],"Serial reviews":["reviews","s-rev"],"Latest review":["reviews","s-rev"],"Clerked by":["clerking","s-mx"]};
+function renderCheck(secs){const have=new Set(secs.map(x=>x[0]));const need=["Investigations","History of presenting illness","Examination","Diagnosis","Management"].filter(t=>!have.has(t));
+  const card=(t,body,miss)=>{const [tab,sec]=CKMAP[t]||["clerking","s-pt"];return`<div class="ck ${miss?"missing":""}"><div class="ck-h"><b>${esc(t)}</b><button type="button" data-tab="${tab}" data-sec="${sec}" aria-label="Change ${esc(t)}">Change</button></div><div class="ck-b">${body}</div></div>`};
+  $("checkList").innerHTML=secs.map(([t,ls])=>card(t,ls.map(l=>`<span>${esc(l)}</span>`).join(""),false)).join("")+need.map(t=>card(t,"Not provided",true)).join("")}
+$("checkList").addEventListener("click",e=>{const b=e.target.closest("button[data-tab]");if(b)goTo(b.dataset.tab,b.dataset.sec)});
+function buildPrint(secs){lastSecs=secs;renderCheck(secs);const v=id=>$(id).value.trim();const g=radio("gender");
   const box=[["Name",v("name")],["Age / gender",[v("age")&&v("age")+" y",g&&lbl("gender",g)].filter(Boolean).join(", ")],["IC",v("ic")],["RN",v("rn")],["Bed / ward",v("bed")],["Date & time clerked",prettyDT(v("clerkDT"))]];
   const tbl=document.querySelector("#revTrend table");
   $("printView").innerHTML=`<div class="pv-h"><div><b>INPATIENT DENGUE ASSESSMENT AND CLERKING</b><span>Appendix 9 · CPG Management of Dengue in Adults (4th edition)</span></div><span>Printed ${esc(prettyDT(nowLocal()))}</span></div>
@@ -1348,13 +1414,13 @@ function snapshot(){const v=id=>$(id).value.trim();const rs=sortedReviews();cons
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(_){}}
 function save(){if(!store.current)return;store.patients[store.current]={data:collect(),snap:snapshot(),updated:Date.now()};persist();
   $("ptCount").textContent=Object.keys(store.patients).length;
-  const s=store.patients[store.current].snap;$("abWho").textContent=[s.bed,s.name||s.rn||"Unnamed patient"].filter(Boolean).join(" · ");
+  $("abSaved").textContent="✓ Saved "+new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});const s=store.patients[store.current].snap;$("abWho").textContent=[s.bed,s.name||s.rn||"Unnamed patient"].filter(Boolean).join(" · ");
   if(curTab==="patients")renderPatients()}
 const newId=()=>"p"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 function nowLocal(offsetMin=0){const d=new Date(Date.now()+offsetMin*6e4);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)}
 function daysAgo(n){return nowLocal(-n*1440).slice(0,10)}
 
-const EXAMPLE=()=>({_example:true,clerkDT:nowLocal(),name:"Example Patient",bed:"Bed 12",age:"42",gender_m:true,ic:"",rn:"EX-0001",admit_etd:true,vacc_n:true,
+const EXAMPLE=()=>({_example:true,fxDrop:"20",clerkDT:nowLocal(),name:"Example Patient",bed:"Bed 12",age:"42",gender_m:true,ic:"",rn:"EX-0001",admit_etd:true,vacc_n:true,
   meds:"Metformin 500 mg BD (last dose this morning)\nAmlodipine 5 mg OD (last dose yesterday)",
   risk_obesity:true,risk_dm:true,risk_hpt:true,
   ns1:"Positive",igm:"Negative",dxDate:daysAgo(2),bDate:daysAgo(2),bHb:"14.8",bWcc:"4.1",bHct:"43",bPlt:"142",
@@ -1373,7 +1439,7 @@ const EXAMPLE=()=>({_example:true,clerkDT:nowLocal(),name:"Example Patient",bed:
    {dt:nowLocal(120),sbp:"108",dbp:"84",pr:"102",rr:"20",spo2:"98",temp:"37.2",dxt:"7.9",perf:{cC:"0",cR:"1",cT:"1",cV:"0",cRate:"1"},hct:"46",plt:"54",ph:"7.33",hco3:"19",be:"-5",lact:"2.6",ioIn:"2600",ioOut:"900",uoMl:"110",uoHrs:"2",notes:"Less abdominal pain, tolerating sips. Still cold peripheries.",phase:"critical",cls:"dwws",shock:"y",shockSub:"comp",plan:"Step down crystalloid rate per regime; repeat HCT in 2 h",next:nowLocal(240),by:""},
    {dt:nowLocal(300),sbp:"118",dbp:"80",pr:"92",rr:"18",spo2:"99",temp:"37.0",dxt:"6.8",ecg:"Sinus rhythm 92/min",perf:{cC:"0",cR:"0",cT:"0",cV:"0",cRate:"0"},hct:"43",plt:"49",ph:"7.38",hco3:"22",be:"-2",lact:"1.6",ioIn:"3400",ioOut:"1500",uoMl:"190",uoHrs:"3",notes:"Warm peripheries, CRT <3 s, passing urine well",phase:"critical",cls:"dwws",shock:"n",shockSub:null,plan:"Continue step-down; HCT 4-hourly; watch for fluid overload",next:nowLocal(540),by:""}]});
 
-function fresh(){return{clerkDT:nowLocal(),byDT:nowLocal(),sumMode_all:true}}
+function fresh(){return{clerkDT:nowLocal(),byDT:nowLocal(),sumMode_all:true,fxDrop:"20"}}
 function apply(d){isExample=!!d._example;load(d);if(!$("rDT").value)$("rDT").value=nowLocal();$("revFormTitle").textContent=`Add review ${reviews.length+1}`;$("btnRevSave").textContent="Save review";$("btnRevCancel").hidden=true;$("exBanner").hidden=!isExample;calc();}
 function switchTo(id){if(store.current&&store.patients[store.current])save();store.current=id;apply(store.patients[id].data);save()}
 function addPatient(data){const id=newId();store.patients[id]={data,snap:null,updated:Date.now()};switchTo(id);return id}
@@ -1384,7 +1450,14 @@ function deletePatient(id){const rec=store.patients[id];delete store.patients[id
 function renderPatients(){
   const ids=Object.keys(store.patients);
   const sn=id=>store.patients[id].snap||snapFromData(store.patients[id].data);
-  ids.sort((a,b)=>{const x=sn(a),y=sn(b);if(!x.bed!==!y.bed)return x.bed?-1:1;return(x.bed||"").localeCompare(y.bed||"",undefined,{numeric:true})||(x.name||"").localeCompare(y.name||"")});
+  const byBed=(x,y)=>{if(!x.bed!==!y.bed)return x.bed?-1:1;return(x.bed||"").localeCompare(y.bed||"",undefined,{numeric:true})||(x.name||"").localeCompare(y.name||"")};
+  const urg=x=>(x.shock==="decomp"?100:x.shock==="comp"?80:0)+(x.crit||0)*10+(x.next&&new Date(x.next)<new Date()?8:0)+(x.warn||0)*3;
+  const mode=store.sort||"bed";
+  ids.sort((a,b)=>{const x=sn(a),y=sn(b);
+    if(mode==="urgent")return urg(y)-urg(x)||byBed(x,y);
+    if(mode==="next"){const nx=x.next?new Date(x.next):Infinity,ny=y.next?new Date(y.next):Infinity;return nx-ny||byBed(x,y)}
+    return byBed(x,y)});
+  if($("ptSort"))$("ptSort").value=mode;
   $("ptCount").textContent=ids.length;
   $("ptList").innerHTML=ids.length?ids.map(id=>{const s=sn(id),p=store.patients[id],cur=id===store.current;
     const st=s.shock?`<span class="st crit">${s.shock==="decomp"?"Decompensated":"Compensated"} shock</span>`:s.crit?`<span class="st crit">${s.crit} urgent</span>`:s.warn?`<span class="st warn">${s.warn} to check</span>`:s.info?`<span class="st">Details incomplete</span>`:(s.crit===0?`<span class="st ok">No alerts</span>`:"");
@@ -1393,7 +1466,7 @@ function renderPatients(){
       <span class="ptbed">${esc(s.bed)||"—"}</span>
       <span class="ptname"><b>${esc(s.name)||"Unnamed patient"}${s.ex?" (example)":""}</b><small>${[s.rn&&"RN "+esc(s.rn),s.age&&esc(s.age)+" y",s.g&&(s.g==="m"?"M":"F")].filter(Boolean).join(" · ")||"No details yet"}</small></span>
       <span>${st}</span>
-      <span class="ptmeta">${s.day?`<span class="chip on">Day ${s.day}</span>`:""}${s.cls?`<span class="chip ${/SD/.test(s.cls)?"crit":/DWWS/.test(s.cls)?"warn":"on"}">${s.cls}</span>`:""}${s.nrev?`<span class="chip">${s.nrev} review${s.nrev>1?"s":""}</span>`:""}${s.next?`<span class="chip ${od?"warn":""}">Next ${fmtShort(s.next)}</span>`:""}${p.updated?`<span class="chip">Updated ${fmtShort(new Date(p.updated-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,16))}</span>`:""}</span>
+      <span class="ptmeta">${s.day?`<span class="chip on">Day ${s.day}</span>`:""}${s.cls?`<span class="chip ${/SD/.test(s.cls)?"crit":/DWWS/.test(s.cls)?"warn":"on"}">${s.cls}</span>`:""}${s.nrev?`<span class="chip">${s.nrev} review${s.nrev>1?"s":""}</span>`:""}${s.next?`<span class="chip ${od?"warn":""}">Next ${fmtShort(s.next)} · ${dueText(s.next)}</span>`:""}${p.updated?`<span class="chip">Updated ${fmtShort(new Date(p.updated-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,16))}</span>`:""}</span>
     </button><div class="ptacts">${cur?`<span class="note">Open now</span>`:""}${TOP?`<button type="button" data-save="${id}">Save file</button>`:""}
       ${ptDel===id?`<span class="confirm">Delete this patient? <button type="button" class="danger" data-delyes="${id}">Delete</button><button type="button" data-delno="1">Keep</button></span>`:`<button type="button" data-del="${id}">Delete</button>`}</div></div>`}).join(""):`<div class="ptempty">No patients on this PC yet.</div>`}
 $("ptList").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
@@ -1402,6 +1475,7 @@ $("ptList").addEventListener("click",e=>{const b=e.target.closest("button");if(!
   else if(b.dataset.delno){ptDel=null;renderPatients()}
   else if(b.dataset.delyes)deletePatient(b.dataset.delyes)
   else if(b.dataset.save)savePatientFile(b.dataset.save)});
+$("ptSort").addEventListener("change",e=>{store.sort=e.target.value;persist();renderPatients()});
 $("btnNewPt").onclick=()=>{addPatient(fresh());goTab("clerking");toast("New patient added")};
 $("btnExample").onclick=()=>{addPatient(EXAMPLE());goTab("clerking");toast("Example patient added")};
 
@@ -1433,6 +1507,7 @@ $("fileOpen").addEventListener("change",e=>{const f=e.target.files&&e.target.fil
 document.querySelector("main").addEventListener("input",e=>{if(e.target.closest("[data-nosave]"))return;if(isExample){isExample=false;$("exBanner").hidden=true}calc();save()});
 document.querySelector("main").addEventListener("change",e=>{if(e.target.closest("[data-nosave]"))return;calc();save()});
 
+setInterval(()=>{if(document.hidden)return;const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))return;calc();if(curTab==="patients")renderPatients()},60000);
 function toast(t,act,fn){const e=$("toast");$("toastMsg").textContent=t;const b=$("toastAct");
   if(act){b.textContent=act;b.hidden=false;b.onclick=()=>{e.hidden=true;fn()}}else{b.hidden=true;b.onclick=null}
   e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,act?7000:1800)}
